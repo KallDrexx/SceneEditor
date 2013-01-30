@@ -26,8 +26,6 @@ namespace SceneEditor.Windows.Forms
             }
 
             base.OnHandleCreated(e);
-
-            
         }
 
         protected override void OnPaint(PaintEventArgs e)

@@ -37,7 +37,7 @@
             this.ClientSize = new System.Drawing.Size(627, 381);
             this.IsMdiContainer = true;
             this.Name = "MainForm";
-            this.Text = "fmMain";
+            this.Text = "Scene Editor";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.ResumeLayout(false);
