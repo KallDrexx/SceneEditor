@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SceneEditor.Core.Rendering;
 
 namespace SceneEditor.XnaRendering
@@ -13,8 +14,9 @@ namespace SceneEditor.XnaRendering
         private readonly GraphicsDeviceService _graphicsService;
         private readonly IntPtr _handle;
         private readonly SpriteBatch _spriteBatch;
+        private readonly Camera2d _camera;
         private int _width, _height;
-        private Texture2D _arrow;
+        private Scene2dNode _arrow;
 
         public XnaRenderer(IntPtr windowHandle, int width, int height)
         {
@@ -28,7 +30,10 @@ namespace SceneEditor.XnaRendering
             _spriteBatch = new SpriteBatch(_graphicsService.GraphicsDevice);
 
             using (var stream = new FileStream("arrow.png", FileMode.Open))
-                _arrow = Texture2D.FromStream(_graphicsService.GraphicsDevice, stream);
+                _arrow = new Scene2dNode(Texture2D.FromStream(_graphicsService.GraphicsDevice, stream), new Vector2(50, 50));
+
+            _camera = new Camera2d(_spriteBatch);
+
         }
 
         public void ResetSize(int width, int height)
@@ -42,11 +47,24 @@ namespace SceneEditor.XnaRendering
 
         public void RenderScene(IEnumerable<SceneRenderObject> sceneObjects)
         {
+            var keyState = Keyboard.GetState();
+            var keys = keyState.GetPressedKeys();
+            var speed = 0.1f;
+            foreach (var key in keys)
+            {
+                switch (key)
+                {
+                    case Keys.Right:
+                        _camera.Move( new Vector2(-speed, 0));
+                        break;
+                }
+            }
+
             var graphicsDevice = _graphicsService.GraphicsDevice;
             graphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_arrow, new Rectangle(0, 0, _arrow.Width, _arrow.Height), Color.White);
+            _camera.Draw(_arrow);
             _spriteBatch.End();
 
             graphicsDevice.Present(new Rectangle(0, 0, _width, _height), null, _handle);
