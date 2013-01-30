@@ -12,26 +12,33 @@ namespace SceneEditor.XnaRendering
         private GraphicsDeviceService _graphicsService;
         private BasicEffect _effect;
         private Stopwatch _timer;
+        private IntPtr _handle;
+        private int _width, _height;
 
         // Vertex positions and colors used to display a spinning triangle.
         public readonly VertexPositionColor[] _vertices =
         {
-            new VertexPositionColor(new Vector3(-1, -1, 0), Color.Black),
-            new VertexPositionColor(new Vector3( 1, -1, 0), Color.Black),
-            new VertexPositionColor(new Vector3( 0,  1, 0), Color.Black),
+            new VertexPositionColor(new Vector3(-1, -1, 0), Color.Red),
+            new VertexPositionColor(new Vector3( 1, -1, 0), Color.Aqua),
+            new VertexPositionColor(new Vector3( 0,  1, 0), Color.Yellow),
         };
 
         public XnaRenderer(IntPtr windowHandle, int width, int height)
         {
             _graphicsService = new GraphicsDeviceService(windowHandle, width, height);
-
             SetViewport(width, height);
+
+            _width = width;
+            _height = height;
         }
 
         public void ResetSize(int width, int height)
         {
             _graphicsService.ResetDevice(width, height);
             SetViewport(width, height);
+
+            _height = height;
+            _width = width;
         }
 
         public void RenderScene(IEnumerable<SceneRenderObject> sceneObjects)
@@ -73,6 +80,8 @@ namespace SceneEditor.XnaRendering
             // Draw the triangle.
             _effect.CurrentTechnique.Passes[0].Apply();
             graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, 1);
+
+            graphicsDevice.Present(new Rectangle(0, 0, _width, _height), null, _handle);
         }
 
         public void Dispose()

@@ -20,14 +20,14 @@ namespace SceneEditor.Windows
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
+            var render = new RenderForm();
+            render.MdiParent = this;
+            render.Show();
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            var render = new RenderForm();
-            render.MdiParent = this;
-            render.Show();
+            
         }
     }
 }

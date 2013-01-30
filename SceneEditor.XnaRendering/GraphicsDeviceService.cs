@@ -24,7 +24,8 @@ namespace SceneEditor.XnaRendering
                 BackBufferWidth = Math.Max(width, 1),
                 DepthStencilFormat = DepthFormat.Depth24,
                 DeviceWindowHandle = windowHandle,
-                PresentationInterval = PresentInterval.Immediate
+                PresentationInterval = PresentInterval.Immediate,
+                IsFullScreen = false
             };
 
             _graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.Reach,
