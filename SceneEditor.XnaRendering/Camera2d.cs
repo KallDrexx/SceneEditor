@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace SceneEditor.XnaRendering
 {
-    internal class Camera2d
+    internal class Camera2D
     {
         private readonly SpriteBatch _spriteBatch;
 
         public Vector2 Position { get; set; }
 
-        public Camera2d(SpriteBatch spriteBatch)
+        public Camera2D(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
             Position = new Vector2(0, 0);
         }
 
-        public void Draw(Scene2dNode node)
+        public void Draw(Scene2DNode node)
         {
             var drawPosition = ApplyTransformations(node.WorldPosition);
             node.Draw(_spriteBatch, drawPosition);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,9 +13,9 @@ namespace SceneEditor.XnaRendering
         private readonly GraphicsDeviceService _graphicsService;
         private readonly IntPtr _handle;
         private readonly SpriteBatch _spriteBatch;
-        private readonly Camera2d _camera;
+        private readonly Camera2D _camera;
         private int _width, _height;
-        private Scene2dNode _arrow;
+        private Scene2DNode _arrow;
 
         public XnaRenderer(IntPtr windowHandle, int width, int height)
         {
@@ -28,12 +27,7 @@ namespace SceneEditor.XnaRendering
             _handle = windowHandle;
 
             _spriteBatch = new SpriteBatch(_graphicsService.GraphicsDevice);
-
-            using (var stream = new FileStream("arrow.png", FileMode.Open))
-                _arrow = new Scene2dNode(Texture2D.FromStream(_graphicsService.GraphicsDevice, stream), new Vector2(50, 50));
-
-            _camera = new Camera2d(_spriteBatch);
-
+            _camera = new Camera2D(_spriteBatch);
         }
 
         public void ResetSize(int width, int height)
@@ -45,23 +39,25 @@ namespace SceneEditor.XnaRendering
             _width = width;
         }
 
-        public void RenderScene(IEnumerable<SceneRenderObject> sceneObjects)
+        public void RenderScene(SceneSnapshot snapshot)
         {
-            var keyState = Keyboard.GetState();
-            var keys = keyState.GetPressedKeys();
-            var speed = 0.1f;
-            foreach (var key in keys)
-            {
-                switch (key)
-                {
-                    case Keys.Right:
-                        _camera.Move( new Vector2(-speed, 0));
-                        break;
-                }
-            }
-
             var graphicsDevice = _graphicsService.GraphicsDevice;
             graphicsDevice.Clear(Color.CornflowerBlue);
+
+            if (_arrow == null)
+            {
+                using (var stream = new FileStream("arrow.png", FileMode.Open))
+                    _arrow = new Scene2DNode(Texture2D.FromStream(_graphicsService.GraphicsDevice, stream), new Vector2(50, 50));
+                    
+            }
+
+            if (snapshot != null)
+            {
+                _camera.Position = snapshot.CameraPosition;
+
+                if (snapshot.Sprites != null && snapshot.Sprites.Length >= 1)
+                    _arrow.WorldPosition = snapshot.Sprites[0].Position;
+            }
 
             _spriteBatch.Begin();
             _camera.Draw(_arrow);

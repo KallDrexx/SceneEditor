@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SceneEditor.XnaRendering
 {
-    internal class Scene2dNode
+    internal class Scene2DNode
     {
         private readonly Texture2D _texture;
 
         public Vector2 WorldPosition { get; set; }
 
-        public Scene2dNode(Texture2D texture, Vector2 position)
+        public Scene2DNode(Texture2D texture, Vector2 position)
         {
             _texture = texture;
             WorldPosition = position;

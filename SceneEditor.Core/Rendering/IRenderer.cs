@@ -13,9 +13,9 @@ namespace SceneEditor.Core.Rendering
         void ResetSize(int width, int height);
 
         /// <summary>
-        /// Renders the specified scene objects to the correct rendering system
+        /// Renders the specified scene snapshot to the correct rendering system
         /// </summary>
-        /// <param name="sceneObjects"></param>
-        void RenderScene(IEnumerable<SceneRenderObject> sceneObjects);
+        /// <param name="snapshot"></param>
+        void RenderScene(SceneSnapshot snapshot);
     }
 }
