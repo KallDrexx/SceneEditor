@@ -116,5 +116,31 @@ namespace SceneEditor.Tests.Assets
                 Assert.AreEqual(testContents, contents, "Asset's stream contents were not correct");
             }
         }
+
+        [Test]
+        public void StreamReturnsFullStreamEachGet()
+        {
+            const string testContents = "My Asset Contents";
+            Asset asset;
+            var testStream = new MemoryStream();
+            using (var writer = new StreamWriter(testStream))
+            {
+                writer.Write(testContents);
+                writer.Flush();
+
+                asset = new Asset("test", testStream);
+            }
+
+            string contents1;
+            string contents2;
+
+            using (var reader = new StreamReader(asset.Stream))
+                contents1 = reader.ReadToEnd();
+
+            using (var reader = new StreamReader(asset.Stream))
+                contents2 = reader.ReadToEnd();
+
+            Assert.AreEqual(contents1, contents2, "Stream's contents were not equal");
+        }
     }
 }
