@@ -47,5 +47,14 @@ namespace SceneEditor.Tests.SceneManagement
 
             Assert.AreEqual(finalPosition, manager.CameraPosition, "Camera was not moved to the correct position");
         }
+
+        [Test]
+        public void CanSetCameraDimensions()
+        {
+            var manager = new SceneManager();
+            var dimensions = new Vector(500, 300);
+            manager.SetCameraDimensions(dimensions);
+            Assert.AreEqual(dimensions, manager.CameraDimensions, "Camera's dimensions were incorrect");
+        }
     }
 }

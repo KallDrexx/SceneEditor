@@ -29,17 +29,12 @@ namespace SceneEditor.XnaRendering
             _camera = new Camera2D(_spriteBatch);
         }
 
-        public void ResetSize(int width, int height)
-        {
-            _graphicsService.ResetDevice(width, height);
-            SetViewport(width, height);
-
-            _height = height;
-            _width = width;
-        }
-
         public void RenderScene(SceneSnapshot snapshot)
         {
+            if (_width != (int) snapshot.RenderAreaDimensions.X || _height != (int) snapshot.RenderAreaDimensions.Y)
+                SetViewport((int) snapshot.RenderAreaDimensions.X, (int) snapshot.RenderAreaDimensions.Y);
+                
+
             var graphicsDevice = _graphicsService.GraphicsDevice;
             graphicsDevice.Clear(Color.CornflowerBlue);
 
@@ -72,6 +67,10 @@ namespace SceneEditor.XnaRendering
 
         private void SetViewport(int width, int height)
         {
+            _graphicsService.ResetDevice(width, height);
+            _width = width;
+            _height = height;
+
             var viewPort = new Viewport
             {
                 X = 0,

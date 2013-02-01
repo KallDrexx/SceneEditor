@@ -27,6 +27,9 @@ namespace SceneEditor.Windows.Forms
                 _renderer = new XnaRenderer(Handle, ClientSize.Width, ClientSize.Height);
                 Application.Idle += delegate { Invalidate(); };
                 _timer = Stopwatch.StartNew();
+
+                var area = new Vector(ClientSize.Width, ClientSize.Height);
+                _sceneManager.SetCameraDimensions(area);
             }
 
             base.OnHandleCreated(e);
@@ -34,14 +37,23 @@ namespace SceneEditor.Windows.Forms
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            _sceneManager.MoveCameraBy(new Vector((float)_timer.Elapsed.TotalSeconds / -20, (float)_timer.Elapsed.TotalSeconds/ -20));
+            _sceneManager.MoveCameraBy(new Vector((float)_timer.Elapsed.TotalMinutes / -2, (float)_timer.Elapsed.TotalMinutes / -2));
 
             var snapshot = new SceneSnapshot
             {
-                CameraPosition = new Vector(_sceneManager.CameraPosition.X, _sceneManager.CameraPosition.Y)
+                CameraPosition = _sceneManager.CameraPosition,
+                RenderAreaDimensions = _sceneManager.CameraDimensions
             };
 
             _renderer.RenderScene(snapshot);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            var area = new Vector(ClientSize.Width, ClientSize.Height);
+            _sceneManager.SetCameraDimensions(area);
         }
 
         protected override void OnPaintBackground(PaintEventArgs args)
