@@ -24,8 +24,11 @@ namespace SceneEditor.Windows.Controls
             // RenderForm
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ControlBox = false;
             this.DoubleBuffered = true;
             this.Name = "RenderForm";
+            this.ShowIcon = false;
+            this.Text = "Scene Display";
             this.ResumeLayout(false);
 
         }
