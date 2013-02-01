@@ -46,7 +46,9 @@
   <ItemGroup>
     <Compile Include="Assets\AssetManagerTests.cs" />
     <Compile Include="Assets\AssetTypeTests.cs" />
+    <Compile Include="General\VectorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SceneManagement\SceneManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SceneEditor.Core\SceneEditor.Core.csproj">

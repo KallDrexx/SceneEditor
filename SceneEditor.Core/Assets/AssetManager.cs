@@ -19,7 +19,9 @@ namespace SceneEditor.Core.Assets
 
         public Asset GetAsset(string name)
         {
-            return _assets[name];
+            Asset foundAsset;
+            _assets.TryGetValue(name, out foundAsset);
+            return foundAsset;
         }
     }
 }

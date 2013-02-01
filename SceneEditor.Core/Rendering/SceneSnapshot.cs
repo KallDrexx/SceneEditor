@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+using SceneEditor.Core.General;
 
 namespace SceneEditor.Core.Rendering
 {
     public class SceneSnapshot
     {
-        public Vector2 CameraPosition { get; set; }
-        public Vector2 RenderAreaDimensions { get; set; }
+        public Vector CameraPosition { get; set; }
+        public Vector RenderAreaDimensions { get; set; }
         public SceneSprite[] Sprites { get; set; }
     }
 }

@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.Xna.Framework;
+using SceneEditor.Core.General;
 using SceneEditor.Core.Rendering;
+using SceneEditor.Core.SceneManagement;
 using SceneEditor.XnaRendering;
 
 namespace SceneEditor.Windows.Forms
 {
     public class RenderForm : Form
     {
-        private XnaRenderer _renderer;
+        private IRenderer _renderer;
         private Stopwatch _timer;
+        private SceneManager _sceneManager;
 
         public RenderForm()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            _sceneManager = new SceneManager();
         }
 
         protected override void OnHandleCreated(EventArgs e)
@@ -31,19 +34,14 @@ namespace SceneEditor.Windows.Forms
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            _sceneManager.MoveCameraBy(new Vector((float)_timer.Elapsed.TotalSeconds / -20, (float)_timer.Elapsed.TotalSeconds/ -20));
+
             var snapshot = new SceneSnapshot
             {
-                CameraPosition = new Vector2((float)_timer.Elapsed.TotalSeconds * 5, (float)_timer.Elapsed.TotalSeconds * 5)
+                CameraPosition = new Vector(_sceneManager.CameraPosition.X, _sceneManager.CameraPosition.Y)
             };
 
             _renderer.RenderScene(snapshot);
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-
-            _renderer.ResetSize(ClientSize.Width, ClientSize.Height);
         }
 
         protected override void OnPaintBackground(PaintEventArgs args)

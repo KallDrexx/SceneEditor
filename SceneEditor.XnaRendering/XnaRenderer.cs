@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using SceneEditor.Core.Rendering;
 
 namespace SceneEditor.XnaRendering
@@ -53,10 +52,10 @@ namespace SceneEditor.XnaRendering
 
             if (snapshot != null)
             {
-                _camera.Position = snapshot.CameraPosition;
+                _camera.Position = new Vector2(snapshot.CameraPosition.X, snapshot.CameraPosition.Y);
 
                 if (snapshot.Sprites != null && snapshot.Sprites.Length >= 1)
-                    _arrow.WorldPosition = snapshot.Sprites[0].Position;
+                    _arrow.WorldPosition = new Vector2(snapshot.Sprites[0].Position.X, snapshot.Sprites[0].Position.Y);
             }
 
             _spriteBatch.Begin();

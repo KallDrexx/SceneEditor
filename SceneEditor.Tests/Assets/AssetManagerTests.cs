@@ -35,5 +35,13 @@ namespace SceneEditor.Tests.Assets
                 Assert.AreEqual(assetContent, content, "Asset's content was incorrect");
             }
         }
+
+        [Test]
+        public void NonExistantAssetNameReturnsNull()
+        {
+            var manager = new AssetManager();
+            var result = manager.GetAsset("test 1234");
+            Assert.IsNull(result, "Non-null result was returned");
+        }
     }
 }
