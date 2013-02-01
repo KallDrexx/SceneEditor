@@ -28,7 +28,7 @@ namespace SceneEditor.Windows.Controls
             if (!DesignMode)
             {
                 // Use a picturebox to render the XNA view so we do not get flicker
-                //  and we still can get notified of mouse events
+                //  and so we still can get notified of mouse events
                 var pb = new PictureBox
                 {
                     Parent = this,
@@ -39,12 +39,11 @@ namespace SceneEditor.Windows.Controls
                 pb.MouseDown += RenderArea_MouseDown;
                 pb.MouseUp += RenderArea_MouseUp;
 
-                _renderer = new XnaRenderer(pb.Handle, ClientSize.Width, ClientSize.Height);
+                _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height);
                 Application.Idle += delegate { Invalidate(); };
 
                 var area = new Vector(ClientSize.Width, ClientSize.Height);
                 _sceneManager.SetCameraDimensions(area);
-
             }
         }
 
@@ -53,7 +52,8 @@ namespace SceneEditor.Windows.Controls
             var snapshot = new SceneSnapshot
             {
                 CameraPosition = _sceneManager.CameraPosition,
-                RenderAreaDimensions = _sceneManager.CameraDimensions
+                RenderAreaDimensions = _sceneManager.CameraDimensions,
+                Sprites = new[] { new SceneSprite { AssetName = "arrow", Position = new Vector(50, 50)}}
             };
 
             _renderer.RenderScene(snapshot);

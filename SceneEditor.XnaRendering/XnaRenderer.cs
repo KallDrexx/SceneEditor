@@ -13,8 +13,8 @@ namespace SceneEditor.XnaRendering
         private readonly IntPtr _handle;
         private readonly SpriteBatch _spriteBatch;
         private readonly Camera2D _camera;
+        private Dictionary<string, Scene2DNode> _assetNodes;
         private int _width, _height;
-        private Scene2DNode _arrow;
 
         public XnaRenderer(IntPtr windowHandle, int width, int height)
         {
@@ -27,6 +27,13 @@ namespace SceneEditor.XnaRendering
 
             _spriteBatch = new SpriteBatch(_graphicsService.GraphicsDevice);
             _camera = new Camera2D(_spriteBatch);
+
+            _assetNodes = new Dictionary<string, Scene2DNode>();
+            using (var stream = new FileStream("arrow.png", FileMode.Open))
+            {
+                var node = new Scene2DNode(Texture2D.FromStream(_graphicsService.GraphicsDevice, stream), new Vector2(0, 0));
+                _assetNodes.Add("arrow", node);
+            }
         }
 
         public void RenderScene(SceneSnapshot snapshot)
@@ -38,23 +45,10 @@ namespace SceneEditor.XnaRendering
             var graphicsDevice = _graphicsService.GraphicsDevice;
             graphicsDevice.Clear(Color.CornflowerBlue);
 
-            if (_arrow == null)
-            {
-                using (var stream = new FileStream("arrow.png", FileMode.Open))
-                    _arrow = new Scene2DNode(Texture2D.FromStream(_graphicsService.GraphicsDevice, stream), new Vector2(50, 50));
-                    
-            }
-
-            if (snapshot != null)
-            {
-                _camera.Position = new Vector2(snapshot.CameraPosition.X, snapshot.CameraPosition.Y);
-
-                if (snapshot.Sprites != null && snapshot.Sprites.Length >= 1)
-                    _arrow.WorldPosition = new Vector2(snapshot.Sprites[0].Position.X, snapshot.Sprites[0].Position.Y);
-            }
+            _camera.Position = new Vector2(snapshot.CameraPosition.X, snapshot.CameraPosition.Y);
 
             _spriteBatch.Begin();
-            _camera.Draw(_arrow);
+            DrawSprites(snapshot.Sprites);
             _spriteBatch.End();
 
             graphicsDevice.Present(new Rectangle(0, 0, _width, _height), null, _handle);
@@ -81,6 +75,19 @@ namespace SceneEditor.XnaRendering
                 MaxDepth = 1
             };
             _graphicsService.GraphicsDevice.Viewport = viewPort;
+        }
+
+        private void DrawSprites(IEnumerable<SceneSprite> sprites)
+        {
+            if (sprites == null)
+                return;
+
+            foreach (var sprite in sprites)
+            {
+                var node = _assetNodes[sprite.AssetName];
+                node.WorldPosition = sprite.Position.ToXnaVector();
+                _camera.Draw(node);
+            }
         }
     }
 }
