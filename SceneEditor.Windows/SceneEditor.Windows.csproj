@@ -44,18 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\RenderArea.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RenderArea.Designer.cs">
+      <DependentUpon>RenderArea.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\RenderForm.cs">
+    <Compile Include="Controls\RenderForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\RenderForm.resx">
+    <EmbeddedResource Include="Controls\RenderArea.resx">
+      <DependentUpon>RenderArea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RenderForm.resx">
       <DependentUpon>RenderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">

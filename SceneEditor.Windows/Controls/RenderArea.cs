@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using SceneEditor.Core.General;
@@ -7,18 +6,19 @@ using SceneEditor.Core.Rendering;
 using SceneEditor.Core.SceneManagement;
 using SceneEditor.XnaRendering;
 
-namespace SceneEditor.Windows.Forms
+namespace SceneEditor.Windows.Controls
 {
-    public class RenderForm : Form
+    public partial class RenderArea : Control
     {
         private IRenderer _renderer;
-        private Stopwatch _timer;
         private readonly SceneManager _sceneManager;
         private bool _dragInProgress;
         private Point _prevDragPosition;
 
-        public RenderForm()
+        public RenderArea()
         {
+            InitializeComponent();
+
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             _sceneManager = new SceneManager();
         }
@@ -27,25 +27,25 @@ namespace SceneEditor.Windows.Forms
         {
             if (!DesignMode)
             {
+                // Use a picturebox to render the XNA view so we do not get flicker
+                //  and we still can get notified of mouse events
                 var pb = new PictureBox
                 {
                     Parent = this,
                     Dock = DockStyle.Fill
                 };
 
+                pb.MouseMove += RenderArea_MouseMove;
+                pb.MouseDown += RenderArea_MouseDown;
+                pb.MouseUp += RenderArea_MouseUp;
+
                 _renderer = new XnaRenderer(pb.Handle, ClientSize.Width, ClientSize.Height);
                 Application.Idle += delegate { Invalidate(); };
-                _timer = Stopwatch.StartNew();
 
                 var area = new Vector(ClientSize.Width, ClientSize.Height);
                 _sceneManager.SetCameraDimensions(area);
 
-                pb.MouseMove += RenderForm_MouseMove;
-                pb.MouseDown += RenderForm_MouseDown;
-                pb.MouseUp += RenderForm_MouseUp;
             }
-
-            base.OnHandleCreated(e);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -71,34 +71,7 @@ namespace SceneEditor.Windows.Forms
         {
         }
 
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // RenderForm
-            // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.DoubleBuffered = true;
-            this.Name = "RenderForm";
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderForm_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.RenderForm_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RenderForm_MouseUp);
-            this.ResumeLayout(false);
-
-        }
-
-        private void RenderForm_MouseDown(object sender, MouseEventArgs e)
-        {
-            _dragInProgress = true;
-            _prevDragPosition = e.Location;
-        }
-
-        private void RenderForm_MouseUp(object sender, MouseEventArgs e)
-        {
-            _dragInProgress = false;
-        }
-
-        private void RenderForm_MouseMove(object sender, MouseEventArgs e)
+        private void RenderArea_MouseMove(object sender, MouseEventArgs e)
         {
             if (!_dragInProgress)
                 return;
@@ -108,6 +81,17 @@ namespace SceneEditor.Windows.Forms
 
             _sceneManager.MoveCameraBy(new Vector(deltaX, deltaY));
             _prevDragPosition = e.Location;
+        }
+
+        private void RenderArea_MouseDown(object sender, MouseEventArgs e)
+        {
+            _dragInProgress = true;
+            _prevDragPosition = e.Location;
+        }
+
+        private void RenderArea_MouseUp(object sender, MouseEventArgs e)
+        {
+            _dragInProgress = false;
         }
     }
 }
