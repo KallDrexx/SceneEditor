@@ -27,12 +27,22 @@ namespace SceneEditor.Windows.Forms
         {
             if (!DesignMode)
             {
-                _renderer = new XnaRenderer(Handle, ClientSize.Width, ClientSize.Height);
+                var pb = new PictureBox
+                {
+                    Parent = this,
+                    Dock = DockStyle.Fill
+                };
+
+                _renderer = new XnaRenderer(pb.Handle, ClientSize.Width, ClientSize.Height);
                 Application.Idle += delegate { Invalidate(); };
                 _timer = Stopwatch.StartNew();
 
                 var area = new Vector(ClientSize.Width, ClientSize.Height);
                 _sceneManager.SetCameraDimensions(area);
+
+                pb.MouseMove += RenderForm_MouseMove;
+                pb.MouseDown += RenderForm_MouseDown;
+                pb.MouseUp += RenderForm_MouseUp;
             }
 
             base.OnHandleCreated(e);
@@ -90,10 +100,14 @@ namespace SceneEditor.Windows.Forms
 
         private void RenderForm_MouseMove(object sender, MouseEventArgs e)
         {
-            var deltaX = e.X - _prevDragPosition.X;
-            var deltaY = e.Y - _prevDragPosition.Y;
+            if (!_dragInProgress)
+                return;
+
+            var deltaX = (e.X - _prevDragPosition.X) * -1;
+            var deltaY = (e.Y - _prevDragPosition.Y) * -1;
 
             _sceneManager.MoveCameraBy(new Vector(deltaX, deltaY));
+            _prevDragPosition = e.Location;
         }
     }
 }
