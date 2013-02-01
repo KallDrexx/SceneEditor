@@ -56,5 +56,14 @@ namespace SceneEditor.Tests.SceneManagement
             manager.SetCameraDimensions(dimensions);
             Assert.AreEqual(dimensions, manager.CameraDimensions, "Camera's dimensions were incorrect");
         }
+
+        [Test]
+        public void CameraDimensionsStartAt100X100()
+        {
+            var manager = new SceneManager();
+            var expectedResult = new Vector(100, 100);
+
+            Assert.AreEqual(expectedResult, manager.CameraDimensions, "Camera dimensions were incorrect");
+        }
     }
 }

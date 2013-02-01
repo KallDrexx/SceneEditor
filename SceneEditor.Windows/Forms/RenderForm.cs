@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using SceneEditor.Core.General;
 using SceneEditor.Core.Rendering;
@@ -12,7 +13,9 @@ namespace SceneEditor.Windows.Forms
     {
         private IRenderer _renderer;
         private Stopwatch _timer;
-        private SceneManager _sceneManager;
+        private readonly SceneManager _sceneManager;
+        private bool _dragInProgress;
+        private Point _prevDragPosition;
 
         public RenderForm()
         {
@@ -37,8 +40,6 @@ namespace SceneEditor.Windows.Forms
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            _sceneManager.MoveCameraBy(new Vector((float)_timer.Elapsed.TotalMinutes / -2, (float)_timer.Elapsed.TotalMinutes / -2));
-
             var snapshot = new SceneSnapshot
             {
                 CameraPosition = _sceneManager.CameraPosition,
@@ -69,8 +70,30 @@ namespace SceneEditor.Windows.Forms
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.DoubleBuffered = true;
             this.Name = "RenderForm";
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderForm_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.RenderForm_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RenderForm_MouseUp);
             this.ResumeLayout(false);
 
+        }
+
+        private void RenderForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            _dragInProgress = true;
+            _prevDragPosition = e.Location;
+        }
+
+        private void RenderForm_MouseUp(object sender, MouseEventArgs e)
+        {
+            _dragInProgress = false;
+        }
+
+        private void RenderForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            var deltaX = e.X - _prevDragPosition.X;
+            var deltaY = e.Y - _prevDragPosition.Y;
+
+            _sceneManager.MoveCameraBy(new Vector(deltaX, deltaY));
         }
     }
 }

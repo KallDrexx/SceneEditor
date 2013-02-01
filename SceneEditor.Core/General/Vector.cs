@@ -13,6 +13,11 @@ namespace SceneEditor.Core.General
             Y = y;
         }
 
+        public override string ToString()
+        {
+            return string.Concat("(", X, ", ", Y, ")");
+        }
+
         public static Vector operator +(Vector left, Vector right)
         {
             var x = left.X + right.X;
@@ -62,6 +67,5 @@ namespace SceneEditor.Core.General
         {
             return !(x == y);
         }
-
     }
 }

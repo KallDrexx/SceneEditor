@@ -58,5 +58,12 @@ namespace SceneEditor.Tests.General
 
             Assert.IsTrue(v1 == v2, "Vector objects did not equal");
         }
+
+        [Test]
+        public void ToStringOutputsXAndYValues()
+        {
+            var vector = new Vector(5, 6);
+            Assert.AreEqual("(5, 6)", vector.ToString(), "Vector's string representation was incorrect");
+        }
     }
 }
