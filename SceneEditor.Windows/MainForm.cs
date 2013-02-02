@@ -13,8 +13,11 @@ namespace SceneEditor.Windows
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            var render = new RenderForm { MdiParent = this };
-            render.Show();
+            var render = new RenderForm();
+            render.Show(dockPanel1);
+
+            var propertyWin = new PropertyWindow();
+            propertyWin.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.DockRight);
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

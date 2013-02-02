@@ -49,6 +49,12 @@ namespace SceneEditor.Windows.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (DesignMode)
+            {
+                base.OnPaint(e);
+                return;
+            }
+
             var snapshot = new SceneSnapshot
             {
                 CameraPosition = _sceneManager.CameraPosition,
@@ -62,6 +68,9 @@ namespace SceneEditor.Windows.Controls
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+
+            if (DesignMode)
+                return;
 
             var area = new Vector(ClientSize.Width, ClientSize.Height);
             _sceneManager.SetCameraDimensions(area);
