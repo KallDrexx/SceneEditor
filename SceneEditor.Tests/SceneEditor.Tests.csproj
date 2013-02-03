@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Assets\AssetManagerTests.cs" />
     <Compile Include="Assets\AssetTypeTests.cs" />
+    <Compile Include="Commands\CommandManagerTests.cs" />
     <Compile Include="General\VectorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneManagement\SceneManagerTests.cs" />
