@@ -1,11 +1,19 @@
-﻿using SceneEditor.Core.General;
+﻿using System;
+using SceneEditor.Core.General;
+using SceneEditor.Core.Rendering;
 
 namespace SceneEditor.Core.SceneManagement
 {
     public class SceneManager
     {
-        public SceneManager()
+        private IRenderer _renderer;
+
+        public SceneManager(IRenderer renderer)
         {
+            if (renderer == null)
+                throw new ArgumentNullException("renderer");
+
+            _renderer = renderer;
             CameraDimensions = new Vector(100, 100);
         }
 
@@ -25,6 +33,15 @@ namespace SceneEditor.Core.SceneManagement
         public void SetCameraDimensions(Vector dimensions)
         {
             CameraDimensions = dimensions;
+        }
+
+        public void Render()
+        {
+            _renderer.RenderScene(new SceneSnapshot
+            {
+                CameraPosition = CameraPosition,
+                RenderAreaDimensions = CameraDimensions
+            });
         }
     }
 }

@@ -47,7 +47,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\PropertyWindow.cs" />
+    <Compile Include="Controls\PropertyWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\PropertyWindow.Designer.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>

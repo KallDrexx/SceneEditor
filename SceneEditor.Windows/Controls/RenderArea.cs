@@ -11,7 +11,7 @@ namespace SceneEditor.Windows.Controls
     public partial class RenderArea : Control
     {
         private IRenderer _renderer;
-        private readonly SceneManager _sceneManager;
+        private SceneManager _sceneManager;
         private bool _dragInProgress;
         private Point _prevDragPosition;
 
@@ -20,7 +20,6 @@ namespace SceneEditor.Windows.Controls
             InitializeComponent();
 
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            _sceneManager = new SceneManager();
         }
 
         protected override void OnHandleCreated(EventArgs e)
@@ -40,6 +39,7 @@ namespace SceneEditor.Windows.Controls
                 pb.MouseUp += RenderArea_MouseUp;
 
                 _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height);
+                _sceneManager = new SceneManager(_renderer);
                 Application.Idle += delegate { Invalidate(); };
 
                 var area = new Vector(ClientSize.Width, ClientSize.Height);
@@ -55,14 +55,7 @@ namespace SceneEditor.Windows.Controls
                 return;
             }
 
-            var snapshot = new SceneSnapshot
-            {
-                CameraPosition = _sceneManager.CameraPosition,
-                RenderAreaDimensions = _sceneManager.CameraDimensions,
-                Sprites = new[] { new SceneSprite { AssetName = "arrow", Position = new Vector(50, 50)}}
-            };
-
-            _renderer.RenderScene(snapshot);
+            _sceneManager.Render();
         }
 
         protected override void OnResize(EventArgs e)
@@ -70,6 +63,9 @@ namespace SceneEditor.Windows.Controls
             base.OnResize(e);
 
             if (DesignMode)
+                return;
+
+            if (_sceneManager == null)
                 return;
 
             var area = new Vector(ClientSize.Width, ClientSize.Height);
