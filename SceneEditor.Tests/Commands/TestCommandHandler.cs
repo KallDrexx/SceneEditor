@@ -3,7 +3,9 @@ using SceneEditor.Core.Commands;
 
 namespace SceneEditor.Tests.Commands
 {
+// ReSharper disable ClassNeverInstantiated.Global
     public class TestCommandHandler : ICommandHandler
+// ReSharper restore ClassNeverInstantiated.Global
     {
         public Type HandledCommandType { get { return typeof (TestCommand); } }
         public string CommandName { get { return "Test Command"; } }
