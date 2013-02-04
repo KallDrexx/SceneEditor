@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using SceneEditor.Core.Commands;
+using SceneEditor.Core.Exceptions;
 
 namespace SceneEditor.Tests.Commands
 {
@@ -24,7 +25,7 @@ namespace SceneEditor.Tests.Commands
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(NoCommandHandlerForCommandException))]
         public void CommandWithoutHandlerThrowsException()
         {
             var mockedCommand = new Mock<ICommand>();

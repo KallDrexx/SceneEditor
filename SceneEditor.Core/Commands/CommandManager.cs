@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using SceneEditor.Core.Exceptions;
 
 namespace SceneEditor.Core.Commands
 {
@@ -23,7 +24,7 @@ namespace SceneEditor.Core.Commands
 
             ICommandHandler handler;
             if (!_commandHandlers.TryGetValue(cmd.GetType(), out handler))
-                throw new InvalidOperationException("No command handler known to handle the type: " + cmd.GetType());
+                throw new NoCommandHandlerForCommandException(cmd.GetType());
 
             handler.Execute(cmd);
         }
