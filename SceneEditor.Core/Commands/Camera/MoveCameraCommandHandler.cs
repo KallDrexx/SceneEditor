@@ -16,7 +16,10 @@ namespace SceneEditor.Core.Commands.Camera
 
             var command = (MoveCameraCommand)cmd;
 
-            SceneManager.MoveCameraBy(command.MoveVector);
+            if (command.MoveToExactPosition)
+                SceneManager.MoveCameraTo(command.MoveVector);
+            else
+                SceneManager.MoveCameraBy(command.MoveVector);
         }
     }
 }

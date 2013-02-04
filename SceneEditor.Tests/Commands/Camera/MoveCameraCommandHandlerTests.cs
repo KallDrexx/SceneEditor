@@ -60,5 +60,15 @@ namespace SceneEditor.Tests.Commands.Camera
 
             _mockedSceneManager.Verify(x => x.MoveCameraBy(moveVector));
         }
+
+        [Test]
+        public void HandlerMovesCameraToExactPosition()
+        {
+            var moveVector = new Vector(5, 6);
+            var cmd = new MoveCameraCommand { MoveVector = moveVector, MoveToExactPosition = true };
+            _handler.Execute(cmd);
+
+            _mockedSceneManager.Verify(x => x.MoveCameraTo(moveVector));
+        }
     }
 }
