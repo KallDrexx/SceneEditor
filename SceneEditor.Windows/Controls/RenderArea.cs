@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SceneEditor.Core.Commands;
+using SceneEditor.Core.Commands.Camera;
 using SceneEditor.Core.General;
 using SceneEditor.Core.Rendering;
 using SceneEditor.Core.SceneManagement;
@@ -12,13 +14,13 @@ namespace SceneEditor.Windows.Controls
     {
         private IRenderer _renderer;
         private SceneManager _sceneManager;
+        private CommandManager _commandManager;
         private bool _dragInProgress;
         private Point _prevDragPosition;
 
         public RenderArea()
         {
             InitializeComponent();
-
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
         }
 
@@ -44,6 +46,7 @@ namespace SceneEditor.Windows.Controls
 
                 var area = new Vector(ClientSize.Width, ClientSize.Height);
                 _sceneManager.SetCameraDimensions(area);
+                _commandManager = new CommandManager(_sceneManager, null);
             }
         }
 
@@ -84,7 +87,9 @@ namespace SceneEditor.Windows.Controls
             var deltaX = (e.X - _prevDragPosition.X) * -1;
             var deltaY = (e.Y - _prevDragPosition.Y) * -1;
 
-            _sceneManager.MoveCameraBy(new Vector(deltaX, deltaY));
+            var cmd = new MoveCameraCommand {MoveVector = new Vector(deltaX, deltaY)};
+            _commandManager.Execute(cmd);
+
             _prevDragPosition = e.Location;
         }
 

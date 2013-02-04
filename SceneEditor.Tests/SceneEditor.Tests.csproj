@@ -49,7 +49,9 @@
   <ItemGroup>
     <Compile Include="Assets\AssetManagerTests.cs" />
     <Compile Include="Assets\AssetTypeTests.cs" />
+    <Compile Include="Commands\Camera\MoveCameraCommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
+    <Compile Include="Commands\InvalidCommandHandler.cs" />
     <Compile Include="Commands\TestCommand.cs" />
     <Compile Include="Commands\TestCommandHandler.cs" />
     <Compile Include="General\VectorTests.cs" />

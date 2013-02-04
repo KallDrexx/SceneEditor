@@ -66,5 +66,12 @@ namespace SceneEditor.Tests.Commands
             Assert.AreEqual(_mockedAssetManager.Object, TestCommandHandler.StaticAssetManager,
                             "AssetManager was not correct");
         }
+
+        [Test]
+        public void DoesNotThrowExceptionWithHandlerWithNullType()
+        {
+            // InvalidHandler has a null type, and thus shouldn't cause the crash 
+            //    upon instantiation
+        }
     }
 }

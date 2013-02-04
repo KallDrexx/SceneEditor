@@ -4,6 +4,6 @@ namespace SceneEditor.Core.Commands
 {
     public interface IRequiresSceneManager
     {
-        SceneManager SceneManager { get; set; }
+        ISceneManager SceneManager { get; set; }
     }
 }

@@ -41,6 +41,7 @@ namespace SceneEditor.Core.Commands
                                     .Where(x => typeof(ICommandHandler).IsAssignableFrom(x))
                                     .Where(x => !x.IsInterface)
                                     .Select(x => (ICommandHandler)Activator.CreateInstance(x))
+                                    .Where(x => x.HandledCommandType != null)
                                     .ToArray();
 
             foreach (var handler in handlers)

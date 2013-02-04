@@ -4,9 +4,9 @@ using SceneEditor.Core.Rendering;
 
 namespace SceneEditor.Core.SceneManagement
 {
-    public class SceneManager
+    public class SceneManager : ISceneManager
     {
-        private IRenderer _renderer;
+        private readonly IRenderer _renderer;
 
         public SceneManager(IRenderer renderer)
         {
@@ -40,7 +40,8 @@ namespace SceneEditor.Core.SceneManagement
             _renderer.RenderScene(new SceneSnapshot
             {
                 CameraPosition = CameraPosition,
-                RenderAreaDimensions = CameraDimensions
+                RenderAreaDimensions = CameraDimensions,
+                Sprites = new [] { new SceneSprite { AssetName = "arrow", Position = new Vector(5, 10)}}
             });
         }
     }

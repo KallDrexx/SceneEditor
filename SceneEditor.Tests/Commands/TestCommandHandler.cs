@@ -10,7 +10,7 @@ namespace SceneEditor.Tests.Commands
         public Type HandledCommandType { get { return typeof (TestCommand); } }
         public string CommandName { get { return "Test Command"; } }
         
-        public SceneManager SceneManager
+        public ISceneManager SceneManager
         {
             get { return StaticSceneManager; }
             set { StaticSceneManager = value; }
@@ -22,7 +22,7 @@ namespace SceneEditor.Tests.Commands
             set { StaticAssetManager = value; }
         }
 
-        public static SceneManager StaticSceneManager { get; private set; }
+        public static ISceneManager StaticSceneManager { get; private set; }
         public static AssetManager StaticAssetManager { get; private set; }
 
         public static Action OnExecuted;

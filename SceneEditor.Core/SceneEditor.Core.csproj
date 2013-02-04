@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="Assets\Asset.cs" />
     <Compile Include="Assets\AssetManager.cs" />
+    <Compile Include="Commands\Camera\MoveCameraCommand.cs" />
+    <Compile Include="Commands\Camera\MoveCameraCommandHandler.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\ICommandHandler.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Rendering\SceneSnapshot.cs" />
     <Compile Include="Rendering\SceneSprite.cs" />
+    <Compile Include="SceneManagement\ISceneManager.cs" />
     <Compile Include="SceneManagement\SceneManager.cs" />
   </ItemGroup>
   <ItemGroup />
