@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
+using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands;
 using SceneEditor.Core.Commands.Camera;
 using SceneEditor.Core.General;
@@ -13,7 +15,7 @@ namespace SceneEditor.Windows.Controls
     public partial class RenderArea : Control
     {
         private IRenderer _renderer;
-        private SceneManager _sceneManager;
+        private ISceneManager _sceneManager;
         private CommandManager _commandManager;
         private bool _dragInProgress;
         private Point _prevDragPosition;
@@ -40,13 +42,23 @@ namespace SceneEditor.Windows.Controls
                 pb.MouseDown += RenderArea_MouseDown;
                 pb.MouseUp += RenderArea_MouseUp;
 
-                _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height);
+                var assetManager = new AssetManager();
+                _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height)
+                {
+                    AssetManager = assetManager
+                };
+
                 _sceneManager = new SceneManager(_renderer);
+
                 Application.Idle += delegate { Invalidate(); };
 
                 var area = new Vector(ClientSize.Width, ClientSize.Height);
                 _sceneManager.SetCameraDimensions(area);
-                _commandManager = new CommandManager(_sceneManager, null);
+
+                _commandManager = new CommandManager(_sceneManager, assetManager);
+
+                // Load the test arrow asset
+                assetManager.AddAsset(new Asset(Name = "arrow", new FileStream("arrow.png", FileMode.Open)));
             }
         }
 

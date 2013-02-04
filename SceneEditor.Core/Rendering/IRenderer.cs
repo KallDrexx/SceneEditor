@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using SceneEditor.Core.Assets;
 
 namespace SceneEditor.Core.Rendering
 {
@@ -10,5 +10,7 @@ namespace SceneEditor.Core.Rendering
         /// </summary>
         /// <param name="snapshot"></param>
         void RenderScene(SceneSnapshot snapshot);
+
+        IAssetManager AssetManager { set; }
     }
 }
