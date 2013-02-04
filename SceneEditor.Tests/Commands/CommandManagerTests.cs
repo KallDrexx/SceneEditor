@@ -3,6 +3,8 @@ using Moq;
 using NUnit.Framework;
 using SceneEditor.Core.Commands;
 using SceneEditor.Core.Exceptions;
+using SceneEditor.Core.Rendering;
+using SceneEditor.Core.SceneManagement;
 
 namespace SceneEditor.Tests.Commands
 {
@@ -10,11 +12,15 @@ namespace SceneEditor.Tests.Commands
     public class CommandManagerTests
     {
         private CommandManager _manager;
+        private Mock<SceneManager> _mockedSceneManager;
+        private Mock<IRenderer> _mockedRenderer;
 
         [SetUp]
         public void Setup()
         {
-            _manager = new CommandManager();
+            _mockedRenderer = new Mock<IRenderer>();
+            _mockedSceneManager = new Mock<SceneManager>(_mockedRenderer.Object);
+            _manager = new CommandManager(_mockedSceneManager.Object);
         }
 
         [Test]
@@ -40,6 +46,14 @@ namespace SceneEditor.Tests.Commands
             _manager.Execute(new TestCommand());
 
             Assert.IsTrue(executionOccured, "Execution did not occur");
+        }
+
+        [Test]
+        public void SceneManagerRequiredCommandHandlerHasSceneManagerSet()
+        {
+            Assert.IsNotNull(TestCommandHandler.StaticSceneManager, "SceneHandler was not set");
+            Assert.AreEqual(_mockedSceneManager.Object, TestCommandHandler.StaticSceneManager,
+                            "Scenehandler was not correct");
         }
     }
 }

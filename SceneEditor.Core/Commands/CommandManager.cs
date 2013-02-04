@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using SceneEditor.Core.Exceptions;
+using SceneEditor.Core.SceneManagement;
 
 namespace SceneEditor.Core.Commands
 {
     public class CommandManager
     {
         private readonly Dictionary<Type, ICommandHandler> _commandHandlers;
+        private SceneManager _sceneManager;
 
-        public CommandManager()
+        public CommandManager(SceneManager sceneManager)
         {
             _commandHandlers = new Dictionary<Type, ICommandHandler>();
+            _sceneManager = sceneManager;
             LoadAllCommandHandlers();
         }
 
@@ -38,7 +41,14 @@ namespace SceneEditor.Core.Commands
                                     .ToArray();
 
             foreach (var handler in handlers)
+            {
                 _commandHandlers.Add(handler.HandledCommandType, handler);
+
+                // Add required managers
+                var requiredScenemanager = handler as IRequiresSceneManager;
+                if (requiredScenemanager != null)
+                    requiredScenemanager.SceneManager = _sceneManager;
+            }
         }
     }
 }
