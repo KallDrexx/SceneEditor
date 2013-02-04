@@ -10,10 +10,10 @@ namespace SceneEditor.Core.Commands
     public class CommandManager
     {
         private readonly Dictionary<Type, ICommandHandler> _commandHandlers;
-        private readonly SceneManager _sceneManager;
-        private readonly AssetManager _assetmanager;
+        private readonly ISceneManager _sceneManager;
+        private readonly IAssetManager _assetmanager;
 
-        public CommandManager(SceneManager sceneManager, AssetManager assetManager)
+        public CommandManager(ISceneManager sceneManager, IAssetManager assetManager)
         {
             _commandHandlers = new Dictionary<Type, ICommandHandler>();
             _sceneManager = sceneManager;

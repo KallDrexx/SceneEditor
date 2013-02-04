@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SceneEditor.Core.Assets
 {
-    public class AssetManager
+    public class AssetManager : IAssetManager
     {
         private readonly Dictionary<string, Asset> _assets;
 

@@ -16,14 +16,14 @@ namespace SceneEditor.Tests.Commands
             set { StaticSceneManager = value; }
         }
 
-        public AssetManager AssetManager
+        public IAssetManager AssetManager
         {
             get { return StaticAssetManager; }
             set { StaticAssetManager = value; }
         }
 
         public static ISceneManager StaticSceneManager { get; private set; }
-        public static AssetManager StaticAssetManager { get; private set; }
+        public static IAssetManager StaticAssetManager { get; private set; }
 
         public static Action OnExecuted;
 

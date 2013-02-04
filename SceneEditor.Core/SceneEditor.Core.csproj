@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Assets\Asset.cs" />
     <Compile Include="Assets\AssetManager.cs" />
+    <Compile Include="Assets\IAssetManager.cs" />
     <Compile Include="Commands\Camera\MoveCameraCommand.cs" />
     <Compile Include="Commands\Camera\MoveCameraCommandHandler.cs" />
     <Compile Include="Commands\CommandManager.cs" />
