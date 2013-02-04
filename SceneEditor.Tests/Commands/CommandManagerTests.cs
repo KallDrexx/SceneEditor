@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands;
 using SceneEditor.Core.Exceptions;
 using SceneEditor.Core.Rendering;
@@ -13,6 +14,7 @@ namespace SceneEditor.Tests.Commands
     {
         private CommandManager _manager;
         private Mock<SceneManager> _mockedSceneManager;
+        private Mock<AssetManager> _mockedAssetManager;
         private Mock<IRenderer> _mockedRenderer;
 
         [SetUp]
@@ -20,7 +22,8 @@ namespace SceneEditor.Tests.Commands
         {
             _mockedRenderer = new Mock<IRenderer>();
             _mockedSceneManager = new Mock<SceneManager>(_mockedRenderer.Object);
-            _manager = new CommandManager(_mockedSceneManager.Object);
+            _mockedAssetManager = new Mock<AssetManager>();
+            _manager = new CommandManager(_mockedSceneManager.Object, _mockedAssetManager.Object);
         }
 
         [Test]
@@ -54,6 +57,14 @@ namespace SceneEditor.Tests.Commands
             Assert.IsNotNull(TestCommandHandler.StaticSceneManager, "SceneHandler was not set");
             Assert.AreEqual(_mockedSceneManager.Object, TestCommandHandler.StaticSceneManager,
                             "Scenehandler was not correct");
+        }
+
+        [Test]
+        public void AssetManagerRequiredCommandHandlerHasAssetManagerSet()
+        {
+            Assert.IsNotNull(TestCommandHandler.StaticAssetManager, "AssetManager was not set");
+            Assert.AreEqual(_mockedAssetManager.Object, TestCommandHandler.StaticAssetManager,
+                            "AssetManager was not correct");
         }
     }
 }

@@ -44,6 +44,7 @@
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\ICommandHandler.cs" />
+    <Compile Include="Commands\IRequiresAssetManager.cs" />
     <Compile Include="Commands\IRequiresSceneManager.cs" />
     <Compile Include="Commands\IUndoableCommandHandler.cs" />
     <Compile Include="Exceptions\NoCommandHandlerForCommandException.cs" />
