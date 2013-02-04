@@ -30,5 +30,15 @@ namespace SceneEditor.Tests.Commands
             var mockedCommand = new Mock<ICommand>();
             _manager.Execute(mockedCommand.Object);
         }
+
+        [Test]
+        public void KnownHandlerIsInitializedAndExecutesAssociatedCommand()
+        {
+            var executionOccured = false;
+            TestCommandHandler.OnExecuted = delegate { executionOccured = true; };
+            _manager.Execute(new TestCommand());
+
+            Assert.IsTrue(executionOccured, "Execution did not occur");
+        }
     }
 }
