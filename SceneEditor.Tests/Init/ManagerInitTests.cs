@@ -12,7 +12,6 @@ namespace SceneEditor.Tests.Init
     [TestFixture]
     public class ManagerInitTests
     {
-        // var mockedRenderer = new Mock<IRenderer>();
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void InitThrowsExceptionWhenNullRendererPassedIn()
@@ -48,7 +47,7 @@ namespace SceneEditor.Tests.Init
             ICommandManager commandManager;
             Managers.Init(mockedRenderer.Object, out sceneManager, out assetManager, out commandManager);
 
-            throw new NotImplementedException();
+            mockedRenderer.VerifySet(x => x.AssetManager = assetManager);
         }
     }
 }
