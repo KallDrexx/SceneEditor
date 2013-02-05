@@ -6,6 +6,7 @@ using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands;
 using SceneEditor.Core.Commands.Camera;
 using SceneEditor.Core.General;
+using SceneEditor.Core.Init;
 using SceneEditor.Core.Rendering;
 using SceneEditor.Core.SceneManagement;
 using SceneEditor.XnaRendering;
@@ -16,7 +17,7 @@ namespace SceneEditor.Windows.Controls
     {
         private IRenderer _renderer;
         private ISceneManager _sceneManager;
-        private CommandManager _commandManager;
+        private ICommandManager _commandManager;
         private bool _dragInProgress;
         private Point _prevDragPosition;
 
@@ -42,20 +43,15 @@ namespace SceneEditor.Windows.Controls
                 pb.MouseDown += RenderArea_MouseDown;
                 pb.MouseUp += RenderArea_MouseUp;
 
-                var assetManager = new AssetManager();
-                _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height)
-                {
-                    AssetManager = assetManager
-                };
-
-                _sceneManager = new SceneManager(_renderer);
-
+                _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height);
+                
+                IAssetManager assetManager;
+                Managers.Init(_renderer, out _sceneManager, out assetManager, out _commandManager);
+              
                 Application.Idle += delegate { Invalidate(); };
 
                 var area = new Vector(ClientSize.Width, ClientSize.Height);
                 _sceneManager.SetCameraDimensions(area);
-
-                _commandManager = new CommandManager(_sceneManager, assetManager);
 
                 // Load the test arrow asset
                 assetManager.AddAsset(new Asset(Name = "arrow", new FileStream("arrow.png", FileMode.Open)));

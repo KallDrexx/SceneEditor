@@ -7,7 +7,7 @@ using SceneEditor.Core.SceneManagement;
 
 namespace SceneEditor.Core.Commands
 {
-    public class CommandManager
+    public class CommandManager : ICommandManager
     {
         private readonly Dictionary<Type, ICommandHandler> _commandHandlers;
         private readonly ISceneManager _sceneManager;
