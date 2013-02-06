@@ -1,0 +1,3 @@
+[submodule "dockpanelsuite"]
+	path = dockpanelsuite
+	url = git@github.com:KallDrexx/dockpanelsuite.git
