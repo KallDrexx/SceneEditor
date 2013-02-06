@@ -2,6 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 using SceneEditor.Core.Assets;
+using SceneEditor.Core.General;
 
 namespace SceneEditor.Tests.Assets
 {
@@ -141,6 +142,32 @@ namespace SceneEditor.Tests.Assets
                 contents2 = reader.ReadToEnd();
 
             Assert.AreEqual(contents1, contents2, "Stream's contents were not equal");
+        }
+
+        [Test]
+        public void AssetDeterminesImageSize()
+        {
+            const string fileLocation = "TestFiles\\arrow.png";
+
+            Asset asset;
+            using (var stream = new FileStream(fileLocation, FileMode.Open))
+                asset = new Asset("test", stream);
+
+            var expected = new Vector(24, 23);
+            Assert.AreEqual(expected, asset.ImageDimensions, "Image dimensions were incorrect");
+        }
+
+        [Test]
+        public void AssetsImageSizeIsZeroWithNonImage()
+        {
+            var stream = new MemoryStream();
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write("abcdef");
+                writer.Flush();
+                stream.Position = 0;
+                new Asset("test", stream);
+            }
         }
     }
 }

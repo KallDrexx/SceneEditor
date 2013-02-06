@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
+using SceneEditor.Core.General;
 
 namespace SceneEditor.Core.Assets
 {
@@ -29,6 +31,17 @@ namespace SceneEditor.Core.Assets
 
             sourceStream.CopyTo(_stream);
             _stream.Position = 0;
+
+            // If this is an image, determine the image size
+            try
+            {
+                var image = Image.FromStream(Stream);
+                ImageDimensions = new Vector(image.Width, image.Height);
+            }
+            catch (ArgumentException)
+            {
+                // Ignore if not a valid image
+            }
         }
 
         public string Name { get; private set; }
@@ -47,5 +60,7 @@ namespace SceneEditor.Core.Assets
                 return copy;
             }
         }
+
+        public Vector ImageDimensions { get; private set; }
     }
 }
