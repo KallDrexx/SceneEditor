@@ -7,7 +7,7 @@ namespace SceneEditor.Core.Assets
 {
     public class Asset
     {
-        private MemoryStream _stream;
+        private readonly MemoryStream _stream;
 
         public Asset(string name, Stream sourceStream)
         {

@@ -64,23 +64,31 @@ namespace SceneEditor.Core.SceneManagement
             });
         }
 
-        public void AddBasicSceneSprite(string assetName, Vector position, Vector size)
+        public int AddBasicSceneSprite(string assetName, Vector position, Vector size)
         {
             if (_assetManager.GetAsset(assetName) == null)
                 throw new AssetNotFoundException(assetName);
 
-            _sceneObjects.Add(new BasicSceneSprite
+            var sprite = new BasicSceneSprite
             {
                 Id = (++_currentObjectId),
                 AssetName = assetName,
                 StartPosition = position,
                 Dimensions = size
-            });
+            };
+
+            _sceneObjects.Add(sprite);
+            return sprite.Id;
         }
 
         public IEnumerable<ISceneObject> GetAllSceneObjects()
         {
             return _sceneObjects;
+        }
+
+        public ISceneObject GetObject(int id)
+        {
+            return _sceneObjects.FirstOrDefault(x => x.Id == id);
         }
     }
 }

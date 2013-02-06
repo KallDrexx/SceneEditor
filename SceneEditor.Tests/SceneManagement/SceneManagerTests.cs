@@ -17,7 +17,7 @@ namespace SceneEditor.Tests.SceneManagement
     {
         private const string AssetName = "Test";
 
-        private SceneManager _manager;
+        private ISceneManager _manager;
         private Mock<IRenderer> _mockedRenderer;
         private Mock<IAssetManager> _mockedAssetManager;
 
@@ -197,6 +197,34 @@ namespace SceneEditor.Tests.SceneManagement
 
             _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites[0].Position == position)),
                                    "Incorrect position passed to renderer");
+        }
+
+        [Test]
+        public void AddSpriteReturnsSpriteId()
+        {
+            var position = new Vector(5, 6);
+            var size = new Vector(8, 9);
+            SetupAsset();
+
+            var id = _manager.AddBasicSceneSprite(AssetName, position, size);
+            Assert.AreEqual(1, id, "Returned object id was incorrect");
+        }
+
+        [Test]
+        public void CanGetSpriteById()
+        {
+            var position = new Vector(5, 6);
+            var size = new Vector(8, 9);
+            SetupAsset();
+
+            _manager.AddBasicSceneSprite(AssetName, position, size);
+            var id2 = _manager.AddBasicSceneSprite(AssetName, new Vector(6, 7), size);
+            _manager.AddBasicSceneSprite(AssetName, new Vector(7, 8), size);
+
+            var obj = _manager.GetObject(id2);
+            Assert.IsNotNull(obj, "Null object returned");
+            Assert.IsInstanceOf<BasicSceneSprite>(obj, "Object was of incorrect type");
+            Assert.AreEqual(new Vector(6, 7), obj.StartPosition, "Returned object had an incorrect position");
         }
 
         private void SetupAsset()

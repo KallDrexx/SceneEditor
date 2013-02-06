@@ -166,7 +166,9 @@ namespace SceneEditor.Tests.Assets
                 writer.Write("abcdef");
                 writer.Flush();
                 stream.Position = 0;
+// ReSharper disable ObjectCreationAsStatement
                 new Asset("test", stream);
+// ReSharper restore ObjectCreationAsStatement
             }
         }
     }
