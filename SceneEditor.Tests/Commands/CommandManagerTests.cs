@@ -4,7 +4,6 @@ using NUnit.Framework;
 using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands;
 using SceneEditor.Core.Exceptions;
-using SceneEditor.Core.Rendering;
 using SceneEditor.Core.SceneManagement;
 
 namespace SceneEditor.Tests.Commands
@@ -13,16 +12,14 @@ namespace SceneEditor.Tests.Commands
     public class CommandManagerTests
     {
         private CommandManager _manager;
-        private Mock<SceneManager> _mockedSceneManager;
-        private Mock<AssetManager> _mockedAssetManager;
-        private Mock<IRenderer> _mockedRenderer;
+        private Mock<ISceneManager> _mockedSceneManager;
+        private Mock<IAssetManager> _mockedAssetManager;
 
         [SetUp]
         public void Setup()
         {
-            _mockedRenderer = new Mock<IRenderer>();
-            _mockedSceneManager = new Mock<SceneManager>(_mockedRenderer.Object);
-            _mockedAssetManager = new Mock<AssetManager>();
+            _mockedSceneManager = new Mock<ISceneManager>();
+            _mockedAssetManager = new Mock<IAssetManager>();
             _manager = new CommandManager(_mockedSceneManager.Object, _mockedAssetManager.Object);
         }
 

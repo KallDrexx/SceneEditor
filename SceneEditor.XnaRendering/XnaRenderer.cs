@@ -85,7 +85,7 @@ namespace SceneEditor.XnaRendering
             _graphicsService.GraphicsDevice.Viewport = viewPort;
         }
 
-        private void DrawSprites(IEnumerable<SceneSprite> sprites)
+        private void DrawSprites(IEnumerable<RenderSprite> sprites)
         {
             if (sprites == null)
                 return;

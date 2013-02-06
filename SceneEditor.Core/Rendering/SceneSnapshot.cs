@@ -10,6 +10,6 @@ namespace SceneEditor.Core.Rendering
     {
         public Vector CameraPosition { get; set; }
         public Vector RenderAreaDimensions { get; set; }
-        public SceneSprite[] Sprites { get; set; }
+        public RenderSprite[] Sprites { get; set; }
     }
 }

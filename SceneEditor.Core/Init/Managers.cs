@@ -13,8 +13,8 @@ namespace SceneEditor.Core.Init
             if (renderer == null)
                 throw new ArgumentNullException("renderer");
 
-            sceneManager = new SceneManager(renderer);
             assetManager = new AssetManager();
+            sceneManager = new SceneManager(renderer, assetManager);
             commandManager = new CommandManager(sceneManager, assetManager);
 
             renderer.AssetManager = assetManager;

@@ -51,14 +51,17 @@
     <Compile Include="Commands\IRequiresAssetManager.cs" />
     <Compile Include="Commands\IRequiresSceneManager.cs" />
     <Compile Include="Commands\IUndoableCommandHandler.cs" />
+    <Compile Include="Exceptions\AssetNotFoundException.cs" />
     <Compile Include="Exceptions\NoCommandHandlerForCommandException.cs" />
     <Compile Include="General\Vector.cs" />
     <Compile Include="Init\Managers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Rendering\SceneSnapshot.cs" />
-    <Compile Include="Rendering\SceneSprite.cs" />
+    <Compile Include="Rendering\RenderSprite.cs" />
     <Compile Include="SceneManagement\ISceneManager.cs" />
+    <Compile Include="SceneManagement\Objects\BasicSceneSprite.cs" />
+    <Compile Include="SceneManagement\Objects\ISceneObject.cs" />
     <Compile Include="SceneManagement\SceneManager.cs" />
   </ItemGroup>
   <ItemGroup />

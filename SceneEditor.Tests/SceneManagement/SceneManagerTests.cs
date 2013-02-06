@@ -1,23 +1,32 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
+using SceneEditor.Core.Assets;
+using SceneEditor.Core.Exceptions;
 using SceneEditor.Core.General;
 using SceneEditor.Core.Rendering;
 using SceneEditor.Core.SceneManagement;
+using SceneEditor.Core.SceneManagement.Objects;
 
 namespace SceneEditor.Tests.SceneManagement
 {
     [TestFixture]
     public class SceneManagerTests
     {
+        private const string AssetName = "Test";
+
         private SceneManager _manager;
         private Mock<IRenderer> _mockedRenderer;
+        private Mock<IAssetManager> _mockedAssetManager;
 
         [SetUp]
         public void Setup()
         {
             _mockedRenderer = new Mock<IRenderer>();
-            _manager = new SceneManager(_mockedRenderer.Object);
+            _mockedAssetManager = new Mock<IAssetManager>();
+            _manager = new SceneManager(_mockedRenderer.Object, _mockedAssetManager.Object);
         }
 
         [Test]
@@ -78,7 +87,18 @@ namespace SceneEditor.Tests.SceneManagement
         [ExpectedException(typeof (ArgumentNullException))]
         public void ExceptionThrownWhenInstantiatedWithNullRenderer()
         {
-            new SceneManager(null);
+// ReSharper disable ObjectCreationAsStatement
+            new SceneManager(null, _mockedAssetManager.Object);
+// ReSharper restore ObjectCreationAsStatement
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ExceptionThrownWhenInstantiatedWithNullAssetmanager()
+        {
+// ReSharper disable ObjectCreationAsStatement
+            new SceneManager(_mockedRenderer.Object, null);
+            // ReSharper restore ObjectCreationAsStatement
         }
 
         [Test]
@@ -107,6 +127,92 @@ namespace SceneEditor.Tests.SceneManagement
             _manager.Render();
 
             _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.RenderAreaDimensions == size)));
+        }
+
+        [Test]
+        public void CanAddSpriteToScene()
+        {
+            var position = new Vector(5, 6);
+            var size = new Vector(8, 9);
+            SetupAsset();
+
+            _manager.AddBasicSceneSprite(AssetName, position, size);
+            var objects = _manager.GetAllSceneObjects();
+            Assert.IsNotNull(objects, "Object list was null");
+            var sceneObjects = objects as ISceneObject[] ?? objects.ToArray();
+
+            Assert.AreEqual(1, sceneObjects.Count(), "Incorrect number of objects returned");
+
+            var obj1 = sceneObjects.First() as BasicSceneSprite;
+            Assert.IsNotNull(obj1, "First returned object was not a BasicSceneSrite");
+            Assert.AreEqual(position, obj1.StartPosition, "Returned object's position was incorrect");
+            Assert.AreEqual(size, obj1.Dimensions, "Returned object's size was incorrect");
+            Assert.AreEqual(AssetName, obj1.AssetName, "Returned object's asset name was incorrect");
+        }
+
+        [Test]
+        public void AssignsIncrementingIdToEachSprite()
+        {
+            var position = new Vector(5, 6);
+            var size = new Vector(8, 9);
+            SetupAsset();
+
+            _manager.AddBasicSceneSprite(AssetName, position, size);
+            _manager.AddBasicSceneSprite(AssetName, position, size);
+            _manager.AddBasicSceneSprite(AssetName, position, size);
+
+            var objects = _manager.GetAllSceneObjects()
+                                  .OrderBy(x => x.Id)
+                                  .ToArray();
+
+            Assert.AreEqual(1, objects[0].Id, "First object's ID was incorrect");
+            Assert.AreEqual(2, objects[1].Id, "Second object's ID was incorrect");
+            Assert.AreEqual(3, objects[2].Id, "Third object's ID was incorrect");
+        }
+
+        [Test]
+        [ExpectedException(typeof (AssetNotFoundException))]
+        public void ExceptionThrownIfSpritesAssetDoesNotExist()
+        {
+            var position = new Vector(5, 6);
+            var size = new Vector(8, 9);
+
+            _manager.AddBasicSceneSprite(AssetName, position, size);
+        }
+
+        [Test]
+        public void AddedSpriteIsPassedToRenderer()
+        {
+            var position = new Vector(5, 6);
+            var size = new Vector(8, 9);
+            SetupAsset();
+            _manager.AddBasicSceneSprite(AssetName, position, size);
+            _manager.Render();
+
+            _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites.Length == 1)),
+                                   "Incorrect number of sprites was passed to renderer");
+
+            _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites[0].AssetName == AssetName)),
+                                   "Incorrect asset name passed to renderer");
+
+            _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites[0].Position == position)),
+                                   "Incorrect position passed to renderer");
+        }
+
+        private void SetupAsset()
+        {
+            var testAssetStream = new MemoryStream();
+            Asset asset;
+            using (var writer = new StreamWriter(testAssetStream))
+            {
+                writer.Write("abcdefg");
+                writer.Flush();
+                testAssetStream.Position = 0;
+                asset = new Asset(AssetName, testAssetStream);
+            }
+
+            _mockedAssetManager.Setup(x => x.GetAsset(AssetName))
+                               .Returns(asset);
         }
     }
 }

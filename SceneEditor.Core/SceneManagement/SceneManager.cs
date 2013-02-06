@@ -1,19 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SceneEditor.Core.Assets;
+using SceneEditor.Core.Exceptions;
 using SceneEditor.Core.General;
 using SceneEditor.Core.Rendering;
+using SceneEditor.Core.SceneManagement.Objects;
 
 namespace SceneEditor.Core.SceneManagement
 {
     public class SceneManager : ISceneManager
     {
         private readonly IRenderer _renderer;
+        private readonly IAssetManager _assetManager;
+        private readonly List<ISceneObject> _sceneObjects;
+        private int _currentObjectId;
 
-        public SceneManager(IRenderer renderer)
+        public SceneManager(IRenderer renderer, IAssetManager assetManager)
         {
             if (renderer == null)
                 throw new ArgumentNullException("renderer");
 
+            if (assetManager == null)
+                throw new ArgumentNullException("assetManager");
+
             _renderer = renderer;
+            _assetManager = assetManager;
+            _sceneObjects = new List<ISceneObject>();
             CameraDimensions = new Vector(100, 100);
         }
 
@@ -41,8 +54,33 @@ namespace SceneEditor.Core.SceneManagement
             {
                 CameraPosition = CameraPosition,
                 RenderAreaDimensions = CameraDimensions,
-                Sprites = new [] { new SceneSprite { AssetName = "arrow", Position = new Vector(5, 10)}}
+                Sprites = _sceneObjects.OfType<BasicSceneSprite>()
+                                       .Select(x => new RenderSprite
+                                       {
+                                           AssetName = x.AssetName,
+                                           Position = x.StartPosition
+                                       })
+                                       .ToArray()
             });
+        }
+
+        public void AddBasicSceneSprite(string assetName, Vector position, Vector size)
+        {
+            if (_assetManager.GetAsset(assetName) == null)
+                throw new AssetNotFoundException(assetName);
+
+            _sceneObjects.Add(new BasicSceneSprite
+            {
+                Id = (++_currentObjectId),
+                AssetName = assetName,
+                StartPosition = position,
+                Dimensions = size
+            });
+        }
+
+        public IEnumerable<ISceneObject> GetAllSceneObjects()
+        {
+            return _sceneObjects;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using SceneEditor.Core.General;
+﻿using System.Collections.Generic;
+using SceneEditor.Core.General;
+using SceneEditor.Core.SceneManagement.Objects;
 
 namespace SceneEditor.Core.SceneManagement
 {
@@ -10,5 +12,7 @@ namespace SceneEditor.Core.SceneManagement
         void MoveCameraTo(Vector finalPosition);
         void SetCameraDimensions(Vector dimensions);
         void Render();
+        void AddBasicSceneSprite(string assetName, Vector position, Vector size);
+        IEnumerable<ISceneObject> GetAllSceneObjects();
     }
 }
