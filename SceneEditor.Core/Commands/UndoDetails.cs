@@ -6,5 +6,6 @@ namespace SceneEditor.Core.Commands
     {
         public string CommandName { get; set; }
         public Action PerformUndo { get; set; }
+        public Action PerformRedo { get; set; }
     }
 }

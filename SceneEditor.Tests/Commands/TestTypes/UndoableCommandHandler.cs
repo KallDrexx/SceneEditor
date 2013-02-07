@@ -13,7 +13,8 @@ namespace SceneEditor.Tests.Commands.TestTypes
             LastExecutionUndoDetails = new UndoDetails
             {
                 CommandName = cmd.Name,
-                PerformUndo = ((UndoableCommand)cmd).OnUndo
+                PerformUndo = ((UndoableCommand)cmd).OnUndo,
+                PerformRedo = ((UndoableCommand)cmd).OnRedo
             };
         }
     }

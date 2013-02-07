@@ -13,7 +13,7 @@ namespace SceneEditor.Tests.Commands
     [TestFixture]
     public class CommandManagerTests
     {
-        private CommandManager _manager;
+        private ICommandManager _manager;
         private Mock<ISceneManager> _mockedSceneManager;
         private Mock<IAssetManager> _mockedAssetManager;
 
@@ -119,6 +119,86 @@ namespace SceneEditor.Tests.Commands
         public void NoErrorOccursWithNoUndoableActions()
         {
             _manager.UndoLastCommand();
+        }
+
+        [Test]
+        public void UndoActionsCanBeReDone()
+        {
+            var redoPerformed = false;
+            var cmd = new UndoableCommand
+            {
+                OnUndo = delegate { },
+                OnRedo = delegate { redoPerformed = true; }
+            };
+
+            _manager.Execute(cmd);
+            _manager.UndoLastCommand();
+            _manager.RedoLastUndoneCommand();
+
+            Assert.IsTrue(redoPerformed, "Redo was not performed");
+        }
+
+        [Test]
+        public void RedoneActionsAddedBackToUndoList()
+        {
+            var cmd = new UndoableCommand
+            {
+                OnUndo = delegate { },
+                OnRedo = delegate { }
+            };
+
+            _manager.Execute(cmd);
+            _manager.UndoLastCommand();
+            _manager.RedoLastUndoneCommand();
+
+            var undoableCommands = _manager.UndoableCommandNames.ToArray();
+            Assert.AreEqual(1, undoableCommands.Length, "Incorrect number of undoable command items");
+            Assert.AreEqual(cmd.Name, undoableCommands[0], "Incorrect name for the command to undo");
+        }
+
+        [Test]
+        public void CanRedoReturnsFalseBeforeAnyUndosArePerformed()
+        {
+            var cmd = new UndoableCommand
+            {
+                OnUndo = delegate { },
+                OnRedo = delegate { }
+            };
+
+            _manager.Execute(cmd);
+
+            Assert.IsFalse(_manager.CanRedo, "Manager incorrectly claiming it can redo actions");
+        }
+
+        [Test]
+        public void CanRedoAfterAnUndoIsPerformed()
+        {
+            var cmd = new UndoableCommand
+            {
+                OnUndo = delegate { },
+                OnRedo = delegate { }
+            };
+
+            _manager.Execute(cmd);
+            _manager.UndoLastCommand();
+
+            Assert.IsTrue(_manager.CanRedo, "Manager incorrectly claiming it can not redo actions");
+        }
+
+        [Test]
+        public void PerformingANewUndoableCommandClearsPreventsRedo()
+        {
+            var cmd = new UndoableCommand
+            {
+                OnUndo = delegate { },
+                OnRedo = delegate { }
+            };
+
+            _manager.Execute(cmd);
+            _manager.UndoLastCommand();
+            _manager.Execute(cmd);
+
+            Assert.IsFalse(_manager.CanRedo, "Manager incorrectly claiming it can redo actions");
         }
     }
 }

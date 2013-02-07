@@ -13,6 +13,7 @@ namespace SceneEditor.Core.Commands
         private readonly ISceneManager _sceneManager;
         private readonly IAssetManager _assetmanager;
         private readonly Stack<UndoDetails> _undoableCommands;
+        private readonly Stack<UndoDetails> _redoableCommands;
         private readonly object _padlock = new object();
 
         public IEnumerable<string> UndoableCommandNames
@@ -24,10 +25,13 @@ namespace SceneEditor.Core.Commands
             }
         }
 
+        public bool CanRedo { get { return _redoableCommands.Count > 0; } }
+
         public CommandManager(ISceneManager sceneManager, IAssetManager assetManager)
         {
             _commandHandlers = new Dictionary<Type, ICommandHandler>();
             _undoableCommands = new Stack<UndoDetails>();
+            _redoableCommands = new Stack<UndoDetails>();
             _sceneManager = sceneManager;
             _assetmanager = assetManager;
             LoadAllCommandHandlers();
@@ -53,9 +57,31 @@ namespace SceneEditor.Core.Commands
                 {
                     var details = undoCmd.LastExecutionUndoDetails;
                     if (details != null)
+                    {
                         _undoableCommands.Push(details);
+                        _redoableCommands.Clear();
+                    }
                 }
             }
+        }
+
+        public void UndoLastCommand()
+        {
+            if (_undoableCommands.Count == 0)
+                return;
+
+            var undoAction = _undoableCommands.Pop();
+            undoAction.PerformUndo();
+
+            _redoableCommands.Push(undoAction);
+        }
+
+        public void RedoLastUndoneCommand()
+        {
+            var redo = _redoableCommands.Pop();
+            redo.PerformRedo();
+
+            _undoableCommands.Push(redo);
         }
 
         private void LoadAllCommandHandlers()
@@ -82,15 +108,6 @@ namespace SceneEditor.Core.Commands
                 if (requiredAssetManager != null)
                     requiredAssetManager.AssetManager = _assetmanager;
             }
-        }
-
-        public void UndoLastCommand()
-        {
-            if (_undoableCommands.Count == 0)
-                return;
-
-            var undoAction = _undoableCommands.Pop();
-            undoAction.PerformUndo();
         }
     }
 }
