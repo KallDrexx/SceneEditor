@@ -71,7 +71,7 @@ namespace SceneEditor.Core.Commands
                 return;
 
             var undoAction = _undoableCommands.Pop();
-            undoAction.PerformUndo();
+            undoAction.PerformUndo(undoAction);
 
             _redoableCommands.Push(undoAction);
         }
@@ -79,7 +79,7 @@ namespace SceneEditor.Core.Commands
         public void RedoLastUndoneCommand()
         {
             var redo = _redoableCommands.Pop();
-            redo.PerformRedo();
+            redo.PerformRedo(redo);
 
             _undoableCommands.Push(redo);
         }

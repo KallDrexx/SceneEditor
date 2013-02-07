@@ -24,8 +24,8 @@ namespace SceneEditor.Core.Commands.Objects
             LastExecutionUndoDetails = new UndoDetails
             {
                 CommandName = cmd.Name,
-                PerformUndo = () => SceneManager.DeleteObject(objectId),
-                PerformRedo = () => SceneManager.AddBasicSceneSprite(command.AssetId, finalPosition)
+                PerformUndo = undo => SceneManager.DeleteObject(objectId),
+                PerformRedo = undo => SceneManager.AddBasicSceneSprite(command.AssetId, finalPosition, objectId)
             };
         }
     }

@@ -238,6 +238,20 @@ namespace SceneEditor.Tests.SceneManagement
             _manager.DeleteObject(2334);
         }
 
+        [Test]
+        public void CanSpecifyIdForSpriteWhenAdding()
+        {
+            const int testId = 356;
+            var position = new Vector(5, 6);
+            var assetId = SetupAsset();
+
+            var returnedId =_manager.AddBasicSceneSprite(assetId, position, testId);
+            var obj = _manager.GetAllSceneObjects().First();
+
+            Assert.AreEqual(testId, returnedId, "Returned id did not match override id");
+            Assert.AreEqual(testId, obj.Id, "Returned object did not have the override ID");
+        }
+
         private int SetupAsset()
         {
             var testAssetStream = new MemoryStream();

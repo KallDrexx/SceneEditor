@@ -64,14 +64,14 @@ namespace SceneEditor.Core.SceneManagement
             });
         }
 
-        public int AddBasicSceneSprite(int assetId, Vector position)
+        public int AddBasicSceneSprite(int assetId, Vector position, int? overrideId = null)
         {
             if (_assetManager.GetAsset(assetId) == null)
                 throw new AssetNotFoundException(assetId);
 
             var sprite = new BasicSceneSprite
             {
-                Id = (++_currentObjectId),
+                Id = overrideId ?? (++_currentObjectId),
                 AssetId = assetId,
                 StartPosition = position
             };

@@ -6,7 +6,7 @@ namespace SceneEditor.Tests.Commands.TestTypes
     public class UndoableCommand : ICommand
     {
         public string Name { get { return "Undoable Test"; } }
-        public Action OnUndo { get; set; }
-        public Action OnRedo { get; set; }
+        public Action<UndoDetails> OnUndo { get; set; }
+        public Action<UndoDetails> OnRedo { get; set; }
     }
 }

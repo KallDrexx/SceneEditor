@@ -37,7 +37,7 @@ namespace SceneEditor.Tests.Commands.Objects
 
             _handler.Execute(cmd);
 
-            _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position));
+            _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position, null));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace SceneEditor.Tests.Commands.Objects
 
             _handler.Execute(cmd);
 
-            _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position + cameraPos));
+            _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position + cameraPos, null));
 
         }
 
@@ -102,7 +102,7 @@ namespace SceneEditor.Tests.Commands.Objects
             const int newObjId = 55;
 
             var position = new Vector(25, 33);
-            _mockedSceneManager.Setup(x => x.AddBasicSceneSprite(assetId, position)).Returns(newObjId);
+            _mockedSceneManager.Setup(x => x.AddBasicSceneSprite(assetId, position, null)).Returns(newObjId);
             
             var cmd = new CreateBasicSpriteCommand
             {
@@ -111,7 +111,7 @@ namespace SceneEditor.Tests.Commands.Objects
             };
 
             _handler.Execute(cmd);
-            _handler.LastExecutionUndoDetails.PerformUndo();
+            _handler.LastExecutionUndoDetails.PerformUndo(_handler.LastExecutionUndoDetails);
 
             _mockedSceneManager.Verify(x => x.DeleteObject(newObjId));
         }
@@ -128,9 +128,9 @@ namespace SceneEditor.Tests.Commands.Objects
             };
 
             _handler.Execute(cmd);
-            _handler.LastExecutionUndoDetails.PerformRedo();
+            _handler.LastExecutionUndoDetails.PerformRedo(_handler.LastExecutionUndoDetails);
 
-            _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position), Times.Exactly(2));
+            _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position, null), Times.Exactly(2));
         }
     }
 }
