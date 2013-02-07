@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands;
 using SceneEditor.Core.Commands.Camera;
+using SceneEditor.Core.Commands.Objects;
 using SceneEditor.Core.General;
 using SceneEditor.Core.Init;
 using SceneEditor.Core.Rendering;
@@ -20,6 +21,7 @@ namespace SceneEditor.Windows.Controls
         private ICommandManager _commandManager;
         private bool _dragInProgress;
         private Point _prevDragPosition;
+        private int _testAssetId;
 
         public RenderArea()
         {
@@ -42,6 +44,7 @@ namespace SceneEditor.Windows.Controls
                 pb.MouseMove += RenderArea_MouseMove;
                 pb.MouseDown += RenderArea_MouseDown;
                 pb.MouseUp += RenderArea_MouseUp;
+                pb.MouseClick += RenderArea_MouseClick;
 
                 _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height);
                 
@@ -54,9 +57,7 @@ namespace SceneEditor.Windows.Controls
                 _sceneManager.SetCameraDimensions(area);
 
                 // Load the test arrow asset and test sprites
-                var assetId = assetManager.AddAsset(new Asset(Name = "arrow", new FileStream("arrow.png", FileMode.Open)));
-                _sceneManager.AddBasicSceneSprite(assetId, new Vector(100, 100));
-                _sceneManager.AddBasicSceneSprite(assetId, new Vector(150, 150));
+                _testAssetId = assetManager.AddAsset(new Asset(Name = "arrow", new FileStream("arrow.png", FileMode.Open)));
             }
         }
 
@@ -112,6 +113,19 @@ namespace SceneEditor.Windows.Controls
         private void RenderArea_MouseUp(object sender, MouseEventArgs e)
         {
             _dragInProgress = false;
+        }
+
+        private void RenderArea_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                _commandManager.Execute(new CreateBasicSpriteCommand
+                {
+                    AssetId = _testAssetId,
+                    PositionIsRelativeToCamera = true,
+                    Position = new Vector(e.X, e.Y)
+                });
+            }
         }
     }
 }
