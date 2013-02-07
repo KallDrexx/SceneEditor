@@ -64,7 +64,7 @@ namespace SceneEditor.Core.SceneManagement
             });
         }
 
-        public int AddBasicSceneSprite(int assetId, Vector position, Vector size)
+        public int AddBasicSceneSprite(int assetId, Vector position)
         {
             if (_assetManager.GetAsset(assetId) == null)
                 throw new AssetNotFoundException(assetId);
@@ -73,8 +73,7 @@ namespace SceneEditor.Core.SceneManagement
             {
                 Id = (++_currentObjectId),
                 AssetId = assetId,
-                StartPosition = position,
-                Dimensions = size
+                StartPosition = position
             };
 
             _sceneObjects.Add(sprite);

@@ -12,7 +12,7 @@ namespace SceneEditor.Core.SceneManagement
         void MoveCameraTo(Vector finalPosition);
         void SetCameraDimensions(Vector dimensions);
         void Render();
-        int AddBasicSceneSprite(int assetId, Vector position, Vector size);
+        int AddBasicSceneSprite(int assetId, Vector position);
         IEnumerable<ISceneObject> GetAllSceneObjects();
         ISceneObject GetObject(int id);
     }

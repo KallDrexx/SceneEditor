@@ -131,10 +131,9 @@ namespace SceneEditor.Tests.SceneManagement
         public void CanAddSpriteToScene()
         {
             var position = new Vector(5, 6);
-            var size = new Vector(8, 9);
             var assetId = SetupAsset();
 
-            _manager.AddBasicSceneSprite(assetId, position, size);
+            _manager.AddBasicSceneSprite(assetId, position);
             var objects = _manager.GetAllSceneObjects();
             Assert.IsNotNull(objects, "Object list was null");
             var sceneObjects = objects as ISceneObject[] ?? objects.ToArray();
@@ -144,7 +143,6 @@ namespace SceneEditor.Tests.SceneManagement
             var obj1 = sceneObjects.First() as BasicSceneSprite;
             Assert.IsNotNull(obj1, "First returned object was not a BasicSceneSrite");
             Assert.AreEqual(position, obj1.StartPosition, "Returned object's position was incorrect");
-            Assert.AreEqual(size, obj1.Dimensions, "Returned object's size was incorrect");
             Assert.AreEqual(assetId, obj1.AssetId, "Returned object's asset name was incorrect");
         }
 
@@ -152,12 +150,11 @@ namespace SceneEditor.Tests.SceneManagement
         public void AssignsIncrementingIdToEachSprite()
         {
             var position = new Vector(5, 6);
-            var size = new Vector(8, 9);
             var assetId = SetupAsset();
 
-            _manager.AddBasicSceneSprite(assetId, position, size);
-            _manager.AddBasicSceneSprite(assetId, position, size);
-            _manager.AddBasicSceneSprite(assetId, position, size);
+            _manager.AddBasicSceneSprite(assetId, position);
+            _manager.AddBasicSceneSprite(assetId, position);
+            _manager.AddBasicSceneSprite(assetId, position);
 
             var objects = _manager.GetAllSceneObjects()
                                   .OrderBy(x => x.Id)
@@ -173,19 +170,17 @@ namespace SceneEditor.Tests.SceneManagement
         public void ExceptionThrownIfSpritesAssetDoesNotExist()
         {
             var position = new Vector(5, 6);
-            var size = new Vector(8, 9);
 
-            _manager.AddBasicSceneSprite(77, position, size);
+            _manager.AddBasicSceneSprite(77, position);
         }
 
         [Test]
         public void AddedSpriteIsPassedToRenderer()
         {
             var position = new Vector(5, 6);
-            var size = new Vector(8, 9);
             var assetId = SetupAsset();
 
-            _manager.AddBasicSceneSprite(assetId, position, size);
+            _manager.AddBasicSceneSprite(assetId, position);
             _manager.Render();
 
             _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites.Length == 1)),
@@ -202,10 +197,9 @@ namespace SceneEditor.Tests.SceneManagement
         public void AddSpriteReturnsSpriteId()
         {
             var position = new Vector(5, 6);
-            var size = new Vector(8, 9);
             var assetId = SetupAsset();
 
-            var id = _manager.AddBasicSceneSprite(assetId, position, size);
+            var id = _manager.AddBasicSceneSprite(assetId, position);
             Assert.AreEqual(1, id, "Returned object id was incorrect");
         }
 
@@ -213,12 +207,11 @@ namespace SceneEditor.Tests.SceneManagement
         public void CanGetSpriteById()
         {
             var position = new Vector(5, 6);
-            var size = new Vector(8, 9);
             var assetId = SetupAsset();
 
-            _manager.AddBasicSceneSprite(assetId, position, size);
-            var id2 = _manager.AddBasicSceneSprite(assetId, new Vector(6, 7), size);
-            _manager.AddBasicSceneSprite(assetId, new Vector(7, 8), size);
+            _manager.AddBasicSceneSprite(assetId, position);
+            var id2 = _manager.AddBasicSceneSprite(assetId, new Vector(6, 7));
+            _manager.AddBasicSceneSprite(assetId, new Vector(7, 8));
 
             var obj = _manager.GetObject(id2);
             Assert.IsNotNull(obj, "Null object returned");
