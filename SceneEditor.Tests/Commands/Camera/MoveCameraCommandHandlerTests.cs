@@ -31,12 +31,6 @@ namespace SceneEditor.Tests.Commands.Camera
         }
 
         [Test]
-        public void CommandNameIsReportedCorrectly()
-        {
-            Assert.AreEqual("Camera Movement", _handler.CommandName, "Command name was incorrect");
-        }
-
-        [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void ThrowsExceptionOnNullCommands()
         {

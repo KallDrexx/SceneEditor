@@ -12,10 +12,22 @@ namespace SceneEditor.Core.Commands
         private readonly Dictionary<Type, ICommandHandler> _commandHandlers;
         private readonly ISceneManager _sceneManager;
         private readonly IAssetManager _assetmanager;
+        private readonly Stack<UndoDetails> _undoableCommands;
+        private readonly object _padlock = new object();
+
+        public IEnumerable<string> UndoableCommandNames
+        {
+            get
+            {
+                foreach (var details in _undoableCommands)
+                    yield return details.CommandName;
+            }
+        }
 
         public CommandManager(ISceneManager sceneManager, IAssetManager assetManager)
         {
             _commandHandlers = new Dictionary<Type, ICommandHandler>();
+            _undoableCommands = new Stack<UndoDetails>();
             _sceneManager = sceneManager;
             _assetmanager = assetManager;
             LoadAllCommandHandlers();
@@ -30,7 +42,20 @@ namespace SceneEditor.Core.Commands
             if (!_commandHandlers.TryGetValue(cmd.GetType(), out handler))
                 throw new NoCommandHandlerForCommandException(cmd.GetType());
 
-            handler.Execute(cmd);
+            // Lock is to prevent 2 commands from executing at once
+            //   causing possible undo issues
+            lock(_padlock)
+            {
+                handler.Execute(cmd);
+
+                var undoCmd = handler as IUndoableCommandHandler;
+                if (undoCmd != null)
+                {
+                    var details = undoCmd.LastExecutionUndoDetails;
+                    if (details != null)
+                        _undoableCommands.Push(details);
+                }
+            }
         }
 
         private void LoadAllCommandHandlers()
@@ -57,6 +82,15 @@ namespace SceneEditor.Core.Commands
                 if (requiredAssetManager != null)
                     requiredAssetManager.AssetManager = _assetmanager;
             }
+        }
+
+        public void UndoLastCommand()
+        {
+            if (_undoableCommands.Count == 0)
+                return;
+
+            var undoAction = _undoableCommands.Pop();
+            undoAction.PerformUndo();
         }
     }
 }

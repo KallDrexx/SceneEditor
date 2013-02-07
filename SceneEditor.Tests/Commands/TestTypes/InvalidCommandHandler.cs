@@ -1,7 +1,7 @@
 ﻿using System;
 using SceneEditor.Core.Commands;
 
-namespace SceneEditor.Tests.Commands
+namespace SceneEditor.Tests.Commands.TestTypes
 {
     public class InvalidCommandHandler : ICommandHandler
     {

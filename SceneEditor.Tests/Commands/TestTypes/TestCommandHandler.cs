@@ -3,7 +3,7 @@ using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands;
 using SceneEditor.Core.SceneManagement;
 
-namespace SceneEditor.Tests.Commands
+namespace SceneEditor.Tests.Commands.TestTypes
 {
     public class TestCommandHandler : ICommandHandler, IRequiresSceneManager, IRequiresAssetManager
     {

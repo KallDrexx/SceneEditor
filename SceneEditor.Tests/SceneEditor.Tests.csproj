@@ -51,10 +51,14 @@
     <Compile Include="Assets\AssetTypeTests.cs" />
     <Compile Include="Commands\Camera\MoveCameraCommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
-    <Compile Include="Commands\InvalidCommandHandler.cs" />
+    <Compile Include="Commands\TestTypes\InvalidCommandHandler.cs" />
     <Compile Include="Commands\Objects\CreateBasicSpriteCommandHandlerTests.cs" />
-    <Compile Include="Commands\TestCommand.cs" />
-    <Compile Include="Commands\TestCommandHandler.cs" />
+    <Compile Include="Commands\TestTypes\NullUndoCommand.cs" />
+    <Compile Include="Commands\TestTypes\NullUndoCommandHandler.cs" />
+    <Compile Include="Commands\TestTypes\TestCommand.cs" />
+    <Compile Include="Commands\TestTypes\TestCommandHandler.cs" />
+    <Compile Include="Commands\TestTypes\UndoableCommand.cs" />
+    <Compile Include="Commands\TestTypes\UndoableCommandHandler.cs" />
     <Compile Include="General\VectorTests.cs" />
     <Compile Include="Init\ManagerInitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

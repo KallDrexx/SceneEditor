@@ -54,6 +54,7 @@
     <Compile Include="Commands\IUndoableCommandHandler.cs" />
     <Compile Include="Commands\Objects\CreateBasicSpriteCommand.cs" />
     <Compile Include="Commands\Objects\CreateBasicSpriteCommandHandler.cs" />
+    <Compile Include="Commands\UndoDetails.cs" />
     <Compile Include="Exceptions\AssetNotFoundException.cs" />
     <Compile Include="Exceptions\NoCommandHandlerForCommandException.cs" />
     <Compile Include="General\Vector.cs" />

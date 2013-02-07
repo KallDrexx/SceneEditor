@@ -6,7 +6,6 @@ namespace SceneEditor.Core.Commands.Camera
     public class MoveCameraCommandHandler : ICommandHandler, IRequiresSceneManager
     {
         public Type HandledCommandType { get { return typeof (MoveCameraCommand); } }
-        public string CommandName { get { return "Camera Movement"; } }
         public ISceneManager SceneManager { get; set; }
 
         public void Execute(ICommand cmd)

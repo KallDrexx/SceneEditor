@@ -6,7 +6,6 @@ namespace SceneEditor.Core.Commands.Objects
     public class CreateBasicSpriteCommandHandler : ICommandHandler, IRequiresSceneManager
     {
         public Type HandledCommandType { get { return typeof (CreateBasicSpriteCommand); } }
-        public string CommandName { get; private set; }
         public ISceneManager SceneManager { get; set; }
 
         public void Execute(ICommand cmd)
