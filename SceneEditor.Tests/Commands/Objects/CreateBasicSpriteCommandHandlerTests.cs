@@ -1,7 +1,6 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
-using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands.Objects;
 using SceneEditor.Core.General;
 using SceneEditor.Core.SceneManagement;
@@ -74,6 +73,64 @@ namespace SceneEditor.Tests.Commands.Objects
 
             _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position + cameraPos));
 
+        }
+
+        [Test]
+        public void ExecuteCreatesNotNullUndoAndRedoActions()
+        {
+            var cmd = new CreateBasicSpriteCommand();
+            _handler.Execute(cmd);
+
+            Assert.IsNotNull(_handler.LastExecutionUndoDetails, "LastExecutionUndoDetails was null");
+            Assert.IsNotNull(_handler.LastExecutionUndoDetails.PerformUndo, "PerformUndo delegate was null");
+            Assert.IsNotNull(_handler.LastExecutionUndoDetails.PerformRedo, "PerformRedo delegate was null");
+        }
+
+        [Test]
+        public void ExecuteCreatesUndoDetailsWithCorrectCommandName()
+        {
+            var cmd = new CreateBasicSpriteCommand();
+            _handler.Execute(cmd);
+
+            Assert.AreEqual(cmd.Name, _handler.LastExecutionUndoDetails.CommandName);
+        }
+
+        [Test]
+        public void UndoDeletesSceneObject()
+        {
+            const int assetId = 23;
+            const int newObjId = 55;
+
+            var position = new Vector(25, 33);
+            _mockedSceneManager.Setup(x => x.AddBasicSceneSprite(assetId, position)).Returns(newObjId);
+            
+            var cmd = new CreateBasicSpriteCommand
+            {
+                AssetId = assetId,
+                Position = position
+            };
+
+            _handler.Execute(cmd);
+            _handler.LastExecutionUndoDetails.PerformUndo();
+
+            _mockedSceneManager.Verify(x => x.DeleteObject(newObjId));
+        }
+
+        [Test]
+        public void RedoReAddsSprite()
+        {
+            const int assetId = 23;
+            var position = new Vector(25, 33);
+            var cmd = new CreateBasicSpriteCommand
+            {
+                AssetId = assetId,
+                Position = position
+            };
+
+            _handler.Execute(cmd);
+            _handler.LastExecutionUndoDetails.PerformRedo();
+
+            _mockedSceneManager.Verify(x => x.AddBasicSceneSprite(assetId, position), Times.Exactly(2));
         }
     }
 }

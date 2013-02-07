@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using SceneEditor.Core.Assets;
 using SceneEditor.Core.Commands;
@@ -29,6 +30,28 @@ namespace SceneEditor.Windows.Controls
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
         }
 
+        public void UndoCommand()
+        {
+            if (!_commandManager.UndoableCommandNames.Any())
+            {
+                MessageBox.Show("No undoable commands available");
+                return;
+            }
+
+            _commandManager.UndoLastCommand();
+        }
+
+        public void RedoCommand()
+        {
+            if (!_commandManager.CanRedo)
+            {
+                MessageBox.Show("No redoable commands available");
+                return;
+            }
+
+            _commandManager.RedoLastUndoneCommand();
+        }
+
         protected override void OnHandleCreated(EventArgs e)
         {
             if (!DesignMode)
@@ -45,6 +68,7 @@ namespace SceneEditor.Windows.Controls
                 pb.MouseDown += RenderArea_MouseDown;
                 pb.MouseUp += RenderArea_MouseUp;
                 pb.MouseClick += RenderArea_MouseClick;
+                
 
                 _renderer = new XnaRenderer(pb.Handle, pb.ClientSize.Width, pb.ClientSize.Height);
                 
@@ -127,5 +151,6 @@ namespace SceneEditor.Windows.Controls
                 });
             }
         }
+
     }
 }

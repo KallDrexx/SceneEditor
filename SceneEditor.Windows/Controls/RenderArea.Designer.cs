@@ -29,10 +29,15 @@
         private void InitializeComponent()
         {
             this.SuspendLayout();
+            // 
+            // RenderArea
+            // 
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+
     }
 }
