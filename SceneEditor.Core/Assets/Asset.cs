@@ -9,6 +9,8 @@ namespace SceneEditor.Core.Assets
     {
         private readonly MemoryStream _stream;
 
+        public int Id { get; set; }
+
         public Asset(string name, Stream sourceStream)
         {
             if (sourceStream == null)

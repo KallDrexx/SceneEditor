@@ -15,8 +15,6 @@ namespace SceneEditor.Tests.SceneManagement
     [TestFixture]
     public class SceneManagerTests
     {
-        private const string AssetName = "Test";
-
         private ISceneManager _manager;
         private Mock<IRenderer> _mockedRenderer;
         private Mock<IAssetManager> _mockedAssetManager;
@@ -134,9 +132,9 @@ namespace SceneEditor.Tests.SceneManagement
         {
             var position = new Vector(5, 6);
             var size = new Vector(8, 9);
-            SetupAsset();
+            var assetId = SetupAsset();
 
-            _manager.AddBasicSceneSprite(AssetName, position, size);
+            _manager.AddBasicSceneSprite(assetId, position, size);
             var objects = _manager.GetAllSceneObjects();
             Assert.IsNotNull(objects, "Object list was null");
             var sceneObjects = objects as ISceneObject[] ?? objects.ToArray();
@@ -147,7 +145,7 @@ namespace SceneEditor.Tests.SceneManagement
             Assert.IsNotNull(obj1, "First returned object was not a BasicSceneSrite");
             Assert.AreEqual(position, obj1.StartPosition, "Returned object's position was incorrect");
             Assert.AreEqual(size, obj1.Dimensions, "Returned object's size was incorrect");
-            Assert.AreEqual(AssetName, obj1.AssetName, "Returned object's asset name was incorrect");
+            Assert.AreEqual(assetId, obj1.AssetId, "Returned object's asset name was incorrect");
         }
 
         [Test]
@@ -155,11 +153,11 @@ namespace SceneEditor.Tests.SceneManagement
         {
             var position = new Vector(5, 6);
             var size = new Vector(8, 9);
-            SetupAsset();
+            var assetId = SetupAsset();
 
-            _manager.AddBasicSceneSprite(AssetName, position, size);
-            _manager.AddBasicSceneSprite(AssetName, position, size);
-            _manager.AddBasicSceneSprite(AssetName, position, size);
+            _manager.AddBasicSceneSprite(assetId, position, size);
+            _manager.AddBasicSceneSprite(assetId, position, size);
+            _manager.AddBasicSceneSprite(assetId, position, size);
 
             var objects = _manager.GetAllSceneObjects()
                                   .OrderBy(x => x.Id)
@@ -177,7 +175,7 @@ namespace SceneEditor.Tests.SceneManagement
             var position = new Vector(5, 6);
             var size = new Vector(8, 9);
 
-            _manager.AddBasicSceneSprite(AssetName, position, size);
+            _manager.AddBasicSceneSprite(77, position, size);
         }
 
         [Test]
@@ -185,14 +183,15 @@ namespace SceneEditor.Tests.SceneManagement
         {
             var position = new Vector(5, 6);
             var size = new Vector(8, 9);
-            SetupAsset();
-            _manager.AddBasicSceneSprite(AssetName, position, size);
+            var assetId = SetupAsset();
+
+            _manager.AddBasicSceneSprite(assetId, position, size);
             _manager.Render();
 
             _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites.Length == 1)),
                                    "Incorrect number of sprites was passed to renderer");
 
-            _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites[0].AssetName == AssetName)),
+            _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites[0].AssetId == assetId)),
                                    "Incorrect asset name passed to renderer");
 
             _mockedRenderer.Verify(x => x.RenderScene(It.Is<SceneSnapshot>(y => y.Sprites[0].Position == position)),
@@ -204,9 +203,9 @@ namespace SceneEditor.Tests.SceneManagement
         {
             var position = new Vector(5, 6);
             var size = new Vector(8, 9);
-            SetupAsset();
+            var assetId = SetupAsset();
 
-            var id = _manager.AddBasicSceneSprite(AssetName, position, size);
+            var id = _manager.AddBasicSceneSprite(assetId, position, size);
             Assert.AreEqual(1, id, "Returned object id was incorrect");
         }
 
@@ -215,11 +214,11 @@ namespace SceneEditor.Tests.SceneManagement
         {
             var position = new Vector(5, 6);
             var size = new Vector(8, 9);
-            SetupAsset();
+            var assetId = SetupAsset();
 
-            _manager.AddBasicSceneSprite(AssetName, position, size);
-            var id2 = _manager.AddBasicSceneSprite(AssetName, new Vector(6, 7), size);
-            _manager.AddBasicSceneSprite(AssetName, new Vector(7, 8), size);
+            _manager.AddBasicSceneSprite(assetId, position, size);
+            var id2 = _manager.AddBasicSceneSprite(assetId, new Vector(6, 7), size);
+            _manager.AddBasicSceneSprite(assetId, new Vector(7, 8), size);
 
             var obj = _manager.GetObject(id2);
             Assert.IsNotNull(obj, "Null object returned");
@@ -227,7 +226,7 @@ namespace SceneEditor.Tests.SceneManagement
             Assert.AreEqual(new Vector(6, 7), obj.StartPosition, "Returned object had an incorrect position");
         }
 
-        private void SetupAsset()
+        private int SetupAsset()
         {
             var testAssetStream = new MemoryStream();
             Asset asset;
@@ -236,11 +235,13 @@ namespace SceneEditor.Tests.SceneManagement
                 writer.Write("abcdefg");
                 writer.Flush();
                 testAssetStream.Position = 0;
-                asset = new Asset(AssetName, testAssetStream);
+                asset = new Asset("Test", testAssetStream) {Id = 25};
             }
 
-            _mockedAssetManager.Setup(x => x.GetAsset(AssetName))
+            _mockedAssetManager.Setup(x => x.GetAsset(asset.Id))
                                .Returns(asset);
+
+            return asset.Id;
         }
     }
 }

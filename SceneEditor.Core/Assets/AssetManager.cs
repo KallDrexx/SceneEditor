@@ -1,26 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SceneEditor.Core.Assets
 {
     public class AssetManager : IAssetManager
     {
-        private readonly Dictionary<string, Asset> _assets;
+        private readonly Dictionary<int, Asset> _assets;
+        private int _currentAssetId;
 
         public AssetManager()
         {
-            _assets = new Dictionary<string, Asset>();
+            _assets = new Dictionary<int, Asset>();
         }
 
-        public void AddAsset(Asset asset)
+        public int AddAsset(Asset asset)
         {
-            _assets.Add(asset.Name, asset);
+            asset.Id = (++_currentAssetId);
+            _assets.Add(asset.Id, asset);
+            return asset.Id;
         }
 
-        public Asset GetAsset(string name)
+        public Asset GetAsset(int id)
         {
             Asset foundAsset;
-            _assets.TryGetValue(name, out foundAsset);
+            _assets.TryGetValue(id, out foundAsset);
             return foundAsset;
         }
     }

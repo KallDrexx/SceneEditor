@@ -4,12 +4,12 @@ namespace SceneEditor.Core.Exceptions
 {
     public class AssetNotFoundException : InvalidOperationException
     {
-        public string AssetName { get; private set; }
+        public int AssetId { get; private set; }
 
-        public AssetNotFoundException(string assetName)
-            : base("No asset exists with a name of " + assetName)
+        public AssetNotFoundException(int assetId)
+            : base("No asset exists with an id of " + assetId)
         {
-            AssetName = assetName;
+            AssetId = assetId;
         }
     }
 }

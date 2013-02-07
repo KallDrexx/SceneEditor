@@ -2,7 +2,7 @@
 {
     public interface IAssetManager
     {
-        void AddAsset(Asset asset);
-        Asset GetAsset(string name);
+        int AddAsset(Asset asset);
+        Asset GetAsset(int id);
     }
 }

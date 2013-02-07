@@ -57,22 +57,22 @@ namespace SceneEditor.Core.SceneManagement
                 Sprites = _sceneObjects.OfType<BasicSceneSprite>()
                                        .Select(x => new RenderSprite
                                        {
-                                           AssetName = x.AssetName,
+                                           AssetId = x.AssetId,
                                            Position = x.StartPosition
                                        })
                                        .ToArray()
             });
         }
 
-        public int AddBasicSceneSprite(string assetName, Vector position, Vector size)
+        public int AddBasicSceneSprite(int assetId, Vector position, Vector size)
         {
-            if (_assetManager.GetAsset(assetName) == null)
-                throw new AssetNotFoundException(assetName);
+            if (_assetManager.GetAsset(assetId) == null)
+                throw new AssetNotFoundException(assetId);
 
             var sprite = new BasicSceneSprite
             {
                 Id = (++_currentObjectId),
-                AssetName = assetName,
+                AssetId = assetId,
                 StartPosition = position,
                 Dimensions = size
             };

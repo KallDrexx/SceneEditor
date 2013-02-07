@@ -54,9 +54,9 @@ namespace SceneEditor.Windows.Controls
                 _sceneManager.SetCameraDimensions(area);
 
                 // Load the test arrow asset and test sprites
-                assetManager.AddAsset(new Asset(Name = "arrow", new FileStream("arrow.png", FileMode.Open)));
-                _sceneManager.AddBasicSceneSprite("arrow", new Vector(100, 100), new Vector(10, 10));
-                _sceneManager.AddBasicSceneSprite("arrow", new Vector(150, 150), new Vector(10, 10));
+                var assetId = assetManager.AddAsset(new Asset(Name = "arrow", new FileStream("arrow.png", FileMode.Open)));
+                _sceneManager.AddBasicSceneSprite(assetId, new Vector(100, 100), new Vector(10, 10));
+                _sceneManager.AddBasicSceneSprite(assetId, new Vector(150, 150), new Vector(10, 10));
             }
         }
 

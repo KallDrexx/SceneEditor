@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SceneEditor.Core.Assets;
@@ -14,7 +13,7 @@ namespace SceneEditor.XnaRendering
         private readonly IntPtr _handle;
         private readonly SpriteBatch _spriteBatch;
         private readonly Camera2D _camera;
-        private readonly Dictionary<string, Scene2DNode> _assetNodes;
+        private readonly Dictionary<int, Scene2DNode> _assetNodes;
         private IAssetManager _assetManager;
         private int _width, _height;
 
@@ -30,7 +29,7 @@ namespace SceneEditor.XnaRendering
             _spriteBatch = new SpriteBatch(_graphicsService.GraphicsDevice);
             _camera = new Camera2D(_spriteBatch);
 
-            _assetNodes = new Dictionary<string, Scene2DNode>();
+            _assetNodes = new Dictionary<int, Scene2DNode>();
         }
 
         public IAssetManager AssetManager
@@ -93,18 +92,18 @@ namespace SceneEditor.XnaRendering
             foreach (var sprite in sprites)
             {
                 Scene2DNode node;
-                if (!_assetNodes.TryGetValue(sprite.AssetName, out node))
+                if (!_assetNodes.TryGetValue(sprite.AssetId, out node))
                 {
                     // No node saved for this asset so create one
-                    var asset = _assetManager.GetAsset(sprite.AssetName);
+                    var asset = _assetManager.GetAsset(sprite.AssetId);
                     if (asset == null)
                         throw new InvalidOperationException("Renderer called to render asset that does not exist: " +
-                                                            sprite.AssetName);
+                                                            sprite.AssetId);
 
                     var texture = Texture2D.FromStream(_graphicsService.GraphicsDevice, asset.Stream);
                     node = new Scene2DNode(texture, new Vector2(0, 0));
 
-                    _assetNodes.Add(sprite.AssetName, node);
+                    _assetNodes.Add(sprite.AssetId, node);
                 }
 
                 node.WorldPosition = sprite.Position.ToXnaVector();

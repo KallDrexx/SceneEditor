@@ -5,6 +5,6 @@ namespace SceneEditor.Core.Rendering
     public struct RenderSprite
     {
         public Vector Position { get; set; }
-        public string AssetName { get; set; }
+        public int AssetId { get; set; }
     }
 }
