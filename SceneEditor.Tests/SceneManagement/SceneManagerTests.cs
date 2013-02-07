@@ -219,6 +219,25 @@ namespace SceneEditor.Tests.SceneManagement
             Assert.AreEqual(new Vector(6, 7), obj.StartPosition, "Returned object had an incorrect position");
         }
 
+        [Test]
+        public void CanDeleteObject()
+        {
+            var position = new Vector(5, 6);
+            var assetId = SetupAsset();
+
+            var id = _manager.AddBasicSceneSprite(assetId, position);
+            _manager.DeleteObject(id);
+
+            Assert.AreEqual(0, _manager.GetAllSceneObjects().Count(), "Manager contained an incorrect number of objects");
+        }
+
+        [Test]
+        [ExpectedException(typeof (ArgumentException))]
+        public void ExceptionThrownWhenDeletingNonexistantItem()
+        {
+            _manager.DeleteObject(2334);
+        }
+
         private int SetupAsset()
         {
             var testAssetStream = new MemoryStream();

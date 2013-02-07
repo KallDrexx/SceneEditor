@@ -89,5 +89,14 @@ namespace SceneEditor.Core.SceneManagement
         {
             return _sceneObjects.FirstOrDefault(x => x.Id == id);
         }
+
+        public void DeleteObject(int id)
+        {
+            var obj = _sceneObjects.FirstOrDefault(x => x.Id == id);
+            if (obj == null)
+                throw new ArgumentException("No scene object exists with an id of " + id);
+
+            _sceneObjects.Remove(obj);
+        }
     }
 }

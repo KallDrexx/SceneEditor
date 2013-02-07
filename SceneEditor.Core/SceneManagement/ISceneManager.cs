@@ -15,5 +15,6 @@ namespace SceneEditor.Core.SceneManagement
         int AddBasicSceneSprite(int assetId, Vector position);
         IEnumerable<ISceneObject> GetAllSceneObjects();
         ISceneObject GetObject(int id);
+        void DeleteObject(int id);
     }
 }
